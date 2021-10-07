@@ -1,7 +1,14 @@
 package ui;
 
-public class Main {
-    public static void main(String[] args) {
+import model.PasswordManager;
 
+import java.security.NoSuchAlgorithmException;
+
+public class Main {
+    public static void main(String[] args) throws NoSuchAlgorithmException {
+        PasswordManager initManager = new PasswordManager();
+        while (true) {
+            initManager.init();
+        }
     }
 }
