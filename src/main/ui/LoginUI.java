@@ -6,9 +6,9 @@ public interface LoginUI {
 
     void init();
 
-    String[] login();
+    boolean login();
 
-    LoginInformation register();
+    void register();
 
 
 }

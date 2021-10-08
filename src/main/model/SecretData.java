@@ -5,16 +5,20 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-abstract class SecretData {
-    private MessageDigest digest;
-    private String checksum;
+//todo - add encryption via aes
+//todo - create information data class
 
-    SecretData() {
+abstract class SecretData {
+    protected MessageDigest digest;
+    protected String checksum;
+
+    SecretData(String combinedData) {
         try {
             digest = MessageDigest.getInstance("SHA-1");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
+        checksum = getHash(combinedData);
     }
 
 

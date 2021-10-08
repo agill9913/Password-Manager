@@ -1,57 +1,62 @@
 package ui;
 
-import model.LoginInformation;
+import model.PasswordManager;
 
 import java.util.Scanner;
 
 public class UI implements LoginUI {
 
-    Scanner scan;
-    boolean running;
-    volatile boolean loggedIn;
+    private final Scanner scan;
+    private boolean running;
+    private boolean loggedIn;
+    private PasswordManager manager;
 
     UI() {
         scan = new Scanner(System.in);
         running = true;
         loggedIn = false;
+        manager = new PasswordManager();
     }
 
     public void init() {
         System.out.println("Welcome to Password Manager");
         while (running) {
             System.out.println("What would you like to do today?");
-            String choice = scan.nextLine();
-            if (checkOptions(choice) == 1) {
-                while (loggedIn) {
-                    //
-                }
+            String choice = scan.nextLine().trim();
+            checkOptions(choice);
+            while (loggedIn) {
+                System.out.println("What would you like to do: ");
+                choice = scan.nextLine().trim();
+                afterLoginChoice(choice);
             }
         }
     }
 
-    public String[] login() {
+    public boolean login() {
         System.out.println("Username:");
-        String[] credentials = new String[2];
-        credentials[0] = scan.nextLine().trim();
+        String username = scan.nextLine().trim();
         System.out.println("Password:");
-        credentials[1] = scan.nextLine().trim();
-        return credentials;
+        String password = scan.nextLine().trim();
+        return manager.checkLogin(username, password);
     }
 
-    public LoginInformation register() {
-        String username;
-        String password;
+    public void register() {
         System.out.print("Enter a username: ");
-        username = scan.nextLine();
-        System.out.print("Enter a password");
-        password = scan.nextLine();
-        return new LoginInformation(username, password);
+        String username = scan.nextLine().trim();
+        System.out.print("Enter a password: ");
+        String password = scan.nextLine().trim();
+        manager.addUser(username, password);
     }
 
-    public int checkOptions(String choice) {
+    private int checkOptions(String choice) {
         switch (choice) {
             case "login":
-                login();
+                loggedIn = login(); //todo - rework to allow checksum fault
+                if (loggedIn) {
+                    return 1;
+                }
+                System.out.println("Invalid credentials");
+                break;
             case "register":
                 register();
                 return 2;
@@ -66,12 +71,12 @@ public class UI implements LoginUI {
         return -1;
     }
 
-    public String askUserForData() {
+    private String askUserForData() {
         System.out.println("Next data to add: ");
         return scan.nextLine();
     }
 
-    public void inputInformation() {
+    private void addInformation() {
         System.out.println("Identifier/Site you would like to save ");
         String id = scan.nextLine();
         System.out.println("How many items are you adding");
@@ -80,29 +85,46 @@ public class UI implements LoginUI {
         for (int i = 0; i < size; i++) {
             data[i] = askUserForData();
         }
+        manager.addInfo(id, data);
     }
 
-    public void removeInfo() {
+    private void editInfo() {
+        System.out.println(manager.displayIDs());
+        System.out.println("Which ID would you like to edit");
+        String editID = scan.nextLine();
+        System.out.println("Choose data to edit by typing 1-" + manager.dataSize(editID));
+        int choice = scan.nextInt();
+        System.out.println("What would you like to change it to: ");
+        String newValue = scan.nextLine();
+        manager.editData(editID, choice, newValue);
+        System.out.println("Data saved");
+    }
+
+    private void removeInfo() {
         System.out.println("Identifier for information to remove: ");
         String removedID = scan.nextLine();
         System.out.println("Removing " + removedID);
+        if (manager.removeInfo(removedID)) {
+            System.out.println("Data removed");
+        } else {
+            System.out.println("Data not found, unable to remove");
+        }
+
     }
 
-    public void afterLoginChoice() {
-        System.out.println("What would you like to do: ");
-        String choice = scan.nextLine().trim();
+    private void afterLoginChoice(String choice) {
         switch (choice) {
             case "add":
-                inputInformation();
+                addInformation();
                 break;
             case "display":
-                //
+                System.out.println(manager.displayAllInfo());
                 break;
             case "remove":
                 removeInfo();
                 break;
             case "edit":
-                //
+                editInfo();
                 break;
             case "logout":
                 loggedIn = false;

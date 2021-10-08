@@ -1,11 +1,8 @@
 package ui;
 
-import model.PasswordManager;
-
-import java.security.NoSuchAlgorithmException;
-
 public class Main {
-    public static void main(String[] args) throws NoSuchAlgorithmException {
-        PasswordManager initManager = new PasswordManager();
+    public static void main(String[] args) {
+        UI managerUI = new UI();
+        managerUI.init();
     }
 }

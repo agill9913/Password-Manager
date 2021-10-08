@@ -1,23 +1,22 @@
 package model;
 
-import java.security.NoSuchAlgorithmException;
+import javax.sound.midi.SysexMessage;
 
 public class LoginInformation extends SecretData {
 
-    private String usernameHash;
-    private String passwordHash;
-    private String checksum;
+    private final String usernameHash;
+    private final String passwordHash;
 
     public LoginInformation(String username, String password) {
+        super(username + password);
         usernameHash = getHash(username);
         passwordHash = getHash(password);
-        checksum = getHash(username + password);
     }
 
 
     public int checkValues(String username, String password) {
-        if (usernameHash.equals(getHash(username)) && passwordHash.equals(password)) {
-            if (checksum.equals(username + password)) {
+        if (usernameHash.equals(getHash(username)) && passwordHash.equals(getHash(password))) {
+            if (checksum.equals(getHash(username + password))) {
                 return 0;
             }
             return 1;
