@@ -7,8 +7,5 @@ import java.security.NoSuchAlgorithmException;
 public class Main {
     public static void main(String[] args) throws NoSuchAlgorithmException {
         PasswordManager initManager = new PasswordManager();
-        while (true) {
-            initManager.init();
-        }
     }
 }

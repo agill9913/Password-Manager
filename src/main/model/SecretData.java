@@ -17,7 +17,6 @@ abstract class SecretData {
         }
     }
 
-    abstract boolean checkValues(String data);
 
     protected String getHash(String toHash) {
         digest.reset();

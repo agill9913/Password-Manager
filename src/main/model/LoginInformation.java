@@ -15,9 +15,15 @@ public class LoginInformation extends SecretData {
     }
 
 
-    public boolean checkValues(String username) {
-        return usernameHash.equals(getHash(username))
-                ;
+    public int checkValues(String username, String password) {
+        if (usernameHash.equals(getHash(username)) && passwordHash.equals(password)) {
+            if (checksum.equals(username + password)) {
+                return 0;
+            }
+            return 1;
+        }
+        return -1;
     }
+
 }
 

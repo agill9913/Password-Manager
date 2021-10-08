@@ -1,83 +1,47 @@
 package model;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class PasswordManager {
-    Scanner scan;
     ArrayList<LoginInformation> credentials;
     HashMap<String, String[]> information;
 
     public PasswordManager() {
-        scan = new Scanner(System.in);
         credentials = new ArrayList<>();
+        information = new HashMap<>();
     }
 
-    public void addInfo(String identifier) {
-        System.out.println("Identifier/Site you would like to save ");
-        String name = scan.nextLine();
-        String currData;
-        System.out.println("How many items are you adding");
-        int size = scan.nextInt();
-        String[] data = new String[size];
-        for (int i = 0; i < size; i++) {
-            currData = scan.nextLine();
-            data[i] = currData;
-        }
-        information.put(name, data);
+    public void addInfo(String identifier, String[] data) {
+        information.put(identifier, data);
     }
 
-    public void init() throws NoSuchAlgorithmException {
-        System.out.println("Welcome to Password Manager");
-        System.out.println("What would you like to do today?");
-        String choice = scan.nextLine();
-        checkOptions(choice);
-    }
-
-    public int login() {
-        System.out.println("Username:");
-        String username = scan.nextLine().trim();
-        System.out.println("Password:");
-        String password = scan.nextLine().trim();
+    public boolean checkLogin(String name, String password) {
         for (LoginInformation currInfo: credentials) {
-            if (currInfo.checkValues(username) && currInfo.checkValues(password)) {
-                System.out.println("Welcome " + username);
-                return 1;
+            if (currInfo.checkValues(name, password) != -1) {
+                return true;
             }
         }
-        System.out.println("Invalid credentials");
-        return 0;
+        return false;
     }
 
-    public void register() throws NoSuchAlgorithmException {
-        String username;
-        String password;
-        System.out.print("Enter a username: ");
-        username = scan.nextLine();
-        System.out.print("Enter a password");
-        password = scan.nextLine();
-        credentials.add(new LoginInformation(username, password));
+    public boolean removeInfo(String identifier) {
+        return information.remove(identifier) == null;
     }
 
-    public int checkOptions(String choice) throws NoSuchAlgorithmException {
-        switch (choice) {
-            case "login":
-                return login();
-            case "register":
-                register();
-                return 2;
-            case "exit":
-                System.exit(0);
-                break;
-            default:
-                System.out.println("login - logs user in with username and password");
-                System.out.println("register - creates a new user credential with username and password");
-                System.out.println("exit - exits the password manager");
-                return 3;
+    public String toString(String id) {
+        String retVal = "ID: " + id + '\n';
+        for (int i = 0; i < information.get(id).length; i++) {
+            retVal += information.get(id)[i] + ", ";
         }
-        System.out.println("An error has occurred"); //should never reach but just in case
-        return -1;
+        return retVal;
+    }
+
+    public String displayAllInfo() { //https://www.w3schools.com/java/java_hashmap.asp
+        String retVal = "";
+        for (String id: information.keySet()) {
+            retVal += toString(id);
+        }
+        return retVal;
     }
 }
