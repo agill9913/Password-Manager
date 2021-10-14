@@ -5,6 +5,9 @@ import java.util.HashMap;
 public class UserData {
     private HashMap<String, HashMap<String, byte[]>> dataMap;
 
+
+    //MODIFIES: this
+    //EFFECTS: initializes a new hash map for userdata
     UserData() {
         dataMap = new HashMap<>();
     }
