@@ -1,67 +1,108 @@
 package model;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class PasswordManager {
-    ArrayList<LoginInformation> credentials;
-    HashMap<String, String[]> information;
 
+    private ArrayList<UserAccount> accounts;
+    private UserAccount currUser;
+
+    //MODIFIES: this
+    //EFFECTS: initialize pmanager with a new ArrayList and current user set to null
+    //REQUIRES:
     public PasswordManager() {
-        credentials = new ArrayList<>();
-        information = new HashMap<>();
+        accounts = new ArrayList<>();
+        currUser = null;
     }
 
-    public void addInfo(String identifier, String[] data) {
-        information.put(identifier, data);
+    //MODIFIES:
+    //EFFECTS: returns false if there's no user being served, true if a user is logged in
+    //REQUIRES:
+    public boolean isLoggedIn() {
+        return currUser != null;
     }
 
-    public void addUser(String username, String password) {
-        credentials.add(new LoginInformation(username, password));
+    //MODIFIES: currUser
+    //EFFECTS: adds a new site hashmap to the current user's account
+    //REQUIRES:
+    public void addSite(String site) {
+        currUser.addSite(site);
     }
 
-    public boolean checkLogin(String name, String password) { //todo - redo to send error codes
-        for (LoginInformation currInfo: credentials) {
-            if (currInfo.checkValues(name, password) != -1) {
+    //MODIFIES: currUser
+    //EFFECTS: adds new info to a site in user account
+    //REQUIRES:
+    public void addInfo(String site, String key, String info) throws Exception {
+        currUser.addData(site, key, info);
+    }
+
+    //MODIFIES: currUser
+    //EFFECTS: edits existing site data with newData
+    //REQUIRES:
+    public void editData(String site, String key, String newData) throws Exception {
+        currUser.editData(site, key, newData);
+    }
+
+    //MODIFIES: currUser
+    //EFFECTS: removes data from a site in a user account
+    //REQUIRES:
+    public void removeData(String site, String key) {
+        currUser.removeData(site, key);
+    }
+
+    //MODIFIES: currUser
+    //EFFECTS: removes a site, and it's data from a user account
+    //REQUIRES:
+    public void removeSite(String site) {
+        currUser.removeSite(site);
+    }
+
+    //MODIFIES: this
+    //EFFECTS: adds a user to the user accounts arraylist
+    //REQUIRES:
+    public void addUser(String username, String password) throws NoSuchAlgorithmException {
+        accounts.add(new UserAccount(username, password));
+    }
+
+    //MODIFIES: this
+    //EFFECTS: returns user exists and matches given login, if yes set them as current user
+    //REQUIRES:
+    public boolean checkLogin(String username, String password) {
+        for (UserAccount user: accounts) {
+            if (user.checkLoginCreds(username, password) != -1) {
+                currUser = user;
                 return true;
             }
         }
         return false;
     }
 
-    public int dataSize(String identifier) {
-        return information.get(identifier).length;
+    //MODIFIES: this
+    //EFFECTS: sets current user to null when they log out
+    //REQUIRES:
+    public void userLoggedOut() {
+        currUser = null;
     }
 
-    public void editData(String id, int dataId, String newValue) {
-        information.get(id)[dataId] = newValue;
+    //MODIFIES:
+    //EFFECTS: returns user readable string of all sites and their data
+    //REQUIRES:
+    public String displayAllInfo() throws Exception {
+        return currUser.allDataToString();
     }
 
-    public boolean removeInfo(String identifier) {
-        return information.remove(identifier) == null;
+    //MODIFIES:
+    //EFFECTS: returns only the sites that are saved in a user readable string
+    //REQUIRES:
+    public String displaySites() {
+        return currUser.sitesToString();
     }
 
-    public String displayIDs() {
-        StringBuilder retVal = new StringBuilder();
-        for (String id: information.keySet()) {
-            retVal.append(id);
-        }
-        return retVal.toString();
-    }
-
-    public String toString(String id) {
-        StringBuilder retVal = new StringBuilder("ID: " + id + '\n');
-        for (int i = 0; i < information.get(id).length; i++) {
-            retVal.append(information.get(id)[i]).append(", ");
-        }
-        return retVal.toString();
-    }
-
-    public String displayAllInfo() { //https://www.w3schools.com/java/java_hashmap.asp
-        StringBuilder retVal = new StringBuilder();
-        for (String id: information.keySet()) {
-            retVal.append(toString(id));
-        }
-        return retVal.toString();
+    //MODIFIES:
+    //EFFECTS: returns all info of a site in a user readable string
+    //REQUIRES:
+    public String displayInfo(String site) {
+        return currUser.siteDataToString(site);
     }
 }
