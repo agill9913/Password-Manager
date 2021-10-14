@@ -63,7 +63,7 @@ public class UI implements LoginUI {
         try {
             passManager.addUser(username, password);
         } catch (NoSuchAlgorithmException e) {
-            System.err.println(e);
+            System.err.println("An error has occurred");
         }
     }
 
@@ -107,19 +107,23 @@ public class UI implements LoginUI {
             try {
                 passManager.addInfo(site, dataKey, data);
             } catch (Exception e) {
-                System.err.println(e);
+                System.err.println("An error has occurred");
             }
         }
         System.out.println("Data added");
     }
 
-    //MODIFIES: Pmanager
+    //MODIFIES: PasswordManager
     //EFFECTS: asks user what data they would like to edit and then calls the editData method with data
     //REQUIRES:
     private void editInfo() {
         System.out.print("Which Site would you like to edit: ");
         String site = scan.nextLine();
-        System.out.println(passManager.displayInfo(site));
+        try {
+            System.out.println(passManager.displayInfo(site));
+        } catch (Exception e) {
+            System.err.println("An error has occurred");
+        }
         System.out.print("What would you like to edit: ");
         String key = scan.nextLine();
         System.out.print("What would you like to change it to: ");
@@ -128,11 +132,10 @@ public class UI implements LoginUI {
             passManager.editData(site, key, newData);
         } catch (Exception e) {
             System.err.println("Error has occurred");
-            System.err.println(e);
         }
     }
 
-    //MODIFIES: Pmanager
+    //MODIFIES: PasswordManager
     //EFFECTS: asks user what data they would like to remove and then calls the remove data method
     //REQUIRES:
     private void removeInfo() {
@@ -181,7 +184,7 @@ public class UI implements LoginUI {
                 try {
                     System.out.println(passManager.displayAllInfo());
                 } catch (Exception e) {
-                    System.err.println(e);
+                    System.err.println("An error has occurred");
                 }
                 break;
             case "site":
@@ -189,7 +192,11 @@ public class UI implements LoginUI {
                 break;
             case "info":
                 System.out.println("Which site do you want info for: ");
-                System.out.println(passManager.displayInfo(scan.nextLine()));
+                try {
+                    System.out.println(passManager.displayInfo(scan.nextLine()));
+                } catch (Exception e) {
+                    System.out.println("An Error has occurred");
+                }
                 break;
             default:
                 System.out.println("Invalid choice");

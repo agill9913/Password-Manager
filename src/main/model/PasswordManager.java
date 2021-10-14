@@ -102,7 +102,7 @@ public class PasswordManager {
     //MODIFIES:
     //EFFECTS: returns all info of a site in a user readable string
     //REQUIRES:
-    public String displayInfo(String site) {
+    public String displayInfo(String site) throws Exception {
         return currUser.siteDataToString(site);
     }
 }

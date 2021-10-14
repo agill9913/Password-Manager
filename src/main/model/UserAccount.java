@@ -57,15 +57,11 @@ public class UserAccount {
     //MODIFIES:
     //EFFECTS: returns data of a site in a user readable string
     //REQUIRES:
-    public String siteDataToString(String site) {
+    public String siteDataToString(String site) throws Exception {
         StringBuilder retVal = new StringBuilder();
         HashMap<String, byte[]> data = dataMap.getSiteMap(site);
         for (String key: data.keySet()) {
-            try {
-                retVal.append(key).append(": ").append(cipher.decrypt(data.get(key))).append('\n');
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            retVal.append(key).append(": ").append(cipher.decrypt(data.get(key))).append('\n');
         }
         return retVal.toString();
     }
