@@ -40,22 +40,14 @@ public class UserData {
         if (dataMap.isEmpty() || !dataMap.containsKey(site)) {
             addSite(site);
         }
-        try {
-            dataMap.get(site).put(key, data);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        dataMap.get(site).put(key, data);
     }
 
     //MODIFIES: this
     //EFFECTS: edits data in site from dataMap
     //REQUIRES:
     public void editData(String site, String key, byte[] data) {
-        try {
-            dataMap.get(site).replace(key, data);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        dataMap.get(site).replace(key, data);
     }
 
     //MODIFIES: this
