@@ -27,14 +27,17 @@ public class LoginInformation {
     //EFFECTS: returns 0 if given username and password match saved hash, 1 if checksum mismatch, -1 otherwise
     //REQUIRES:
     public int checkValues(String username, String password) {
+        int errorCode = 0;
         if (usernameHash.equals(hashGenerator.getHash(username))
                 && passwordHash.equals(hashGenerator.getHash(password))) {
             if (getChecksum().equals(hashGenerator.getHash(username + password))) {
-                return 0;
+                return errorCode;
             }
-            return 1;
+            errorCode = 1;
+        } else {
+            errorCode = -1;
         }
-        return -1;
+        return errorCode;
     }
 
 }

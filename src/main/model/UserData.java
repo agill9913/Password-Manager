@@ -40,7 +40,7 @@ public class UserData {
     //EFFECTS: adds data to a site in dataMap
     //REQUIRES:
     public void addData(String site, String key, byte[] data) {
-        if (dataMap.isEmpty() || !dataMap.containsKey(site)) {
+        if (!dataMap.containsKey(site)) {
             addSite(site);
         }
         dataMap.get(site).put(key, data);
