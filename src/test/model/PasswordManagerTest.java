@@ -55,6 +55,21 @@ public class PasswordManagerTest {
     }
 
     @Test
+    public void removingSiteTest() throws Exception {
+        manager1.addUser("Bob", "Joe");
+        manager1.checkLogin("Bob", "Joe");
+        manager1.addSite("google");
+        manager1.addInfo("google", "username", "user123");
+        manager1.removeSite("google");
+        assertEquals("", manager1.displaySites());
+        manager1.addSite("google");
+        manager1.addSite("amazon");
+        manager1.addInfo("amazon", "username", "user456");
+        manager1.removeSite("google");
+        assertEquals("amazon\n", manager1.displaySites());
+    }
+
+    @Test
     public void editInfoTest() throws Exception {
         manager1.addUser("Bob", "Joe");
         manager1.checkLogin("Bob", "Joe");
