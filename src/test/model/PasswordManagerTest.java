@@ -41,6 +41,15 @@ public class PasswordManagerTest {
     }
 
     @Test
+    public void addingInfoToEmpty() throws Exception {
+        manager1.addUser("Bob", "Joe");
+        manager1.checkLogin("Bob", "Joe");
+        manager1.addInfo("google", "username", "user123");
+        assertEquals("google\n", manager1.displaySites());
+        assertEquals("username: user123\n", manager1.displayInfo("google"));
+    }
+
+    @Test
     public void removingInfoTest() throws Exception {
         manager1.addUser("Bob", "Joe");
         manager1.checkLogin("Bob", "Joe");
