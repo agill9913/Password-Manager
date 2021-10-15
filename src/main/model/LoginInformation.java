@@ -23,6 +23,10 @@ public class LoginInformation {
         return checksum;
     }
 
+    public boolean checksumCheck(String hashValue) {
+        return checksum.equals(hashGenerator.getHash(hashValue));
+    }
+
     //MODIFIES:
     //EFFECTS: returns 0 if given username and password match saved hash, 1 if checksum mismatch, -1 otherwise
     //REQUIRES:
@@ -30,10 +34,11 @@ public class LoginInformation {
         int errorCode = 0;
         if (usernameHash.equals(hashGenerator.getHash(username))
                 && passwordHash.equals(hashGenerator.getHash(password))) {
-            if (getChecksum().equals(hashGenerator.getHash(username + password))) {
+            if (checksumCheck(username + password)) {
                 return errorCode;
+            } else {
+                errorCode = 1;
             }
-            errorCode = 1;
         } else {
             errorCode = -1;
         }
