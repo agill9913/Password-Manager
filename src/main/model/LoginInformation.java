@@ -34,7 +34,7 @@ public class LoginInformation {
         if (usernameHash.equals(hashGenerator.getHash(username))
                 && passwordHash.equals(hashGenerator.getHash(password))
                 && checksumCheck(username + password)) {
-                return 0;
+            return 0;
         }
         return -1;
     }
