@@ -10,8 +10,9 @@ import java.security.NoSuchAlgorithmException;
 //Represents a cipher that uses AES to encrypt strings
 public class AES {
 
-    protected SecretKey key;
+    private SecretKey key;
 
+    //EFFECTS: initializes a key to use when encrypting and decrypting data with aes
     AES() throws NoSuchAlgorithmException {
         key = makeKey();
     }

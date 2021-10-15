@@ -13,9 +13,7 @@ public class UI {
     private boolean running;
     private PasswordManager passManager;
 
-    //MODIFIES: this
     //EFFECTS: initializes a new UI object and call the init method to start the password manager
-    //REQUIRES:
     UI() {
         scan = new Scanner(System.in);
         running = true;
@@ -23,9 +21,7 @@ public class UI {
         start();
     }
 
-    //MODIFIES:
     //EFFECTS: creates a welcome UI and menu on startup
-    //REQUIRES:
     public void start() {
         System.out.println("Welcome to Password Manager");
         while (running) {
@@ -40,9 +36,7 @@ public class UI {
         }
     }
 
-    //MODIFIES:
     //EFFECTS: asks user for login info and returns true if it matches existing data otherwise false
-    //REQUIRES:
     public boolean login() {
         System.out.println("Username:");
         String username = scan.nextLine().trim();
@@ -55,9 +49,8 @@ public class UI {
         return false;
     }
 
-    //MODIFIES: PManager
+    //MODIFIES: this
     //EFFECTS: asks user to decide on login credentials and then saves them
-    //REQUIRES:
     public void register() {
         System.out.print("Enter a username: ");
         String username = scan.nextLine().trim();
@@ -72,7 +65,6 @@ public class UI {
 
     //MODIFIES: this
     //EFFECTS: checks what option the user selected and calls relative methods
-    //REQUIRES:
     private void checkOptions(String choice) {
         switch (choice) {
             case "login":
@@ -93,9 +85,8 @@ public class UI {
         }
     }
 
-    //MODIFIES: PasswordManager
+    //MODIFIES: this
     //EFFECTS: gets information that the user wants to save and call the save method
-    //REQUIRES:
     private void addInformation() {
         System.out.print("Site you are saving: ");
         String site = scan.nextLine();
@@ -116,9 +107,8 @@ public class UI {
         System.out.println("Data added");
     }
 
-    //MODIFIES: PasswordManager
+    //MODIFIES: this
     //EFFECTS: asks user what data they would like to edit and then calls the editData method with data
-    //REQUIRES:
     private void editInfo() {
         System.out.print("Which Site would you like to edit: ");
         String site = scan.nextLine();
@@ -138,9 +128,8 @@ public class UI {
         }
     }
 
-    //MODIFIES: PasswordManager
+    //MODIFIES: this
     //EFFECTS: asks user what data they would like to remove and then calls the remove data method
-    //REQUIRES:
     private void removeInfo() {
         System.out.print("What site do you want to remove from: ");
         String site = scan.nextLine();
@@ -150,9 +139,8 @@ public class UI {
         System.out.println("Removed data");
     }
 
-    //MODIFIES: PManager
+    //MODIFIES: this
     //EFFECTS: asks user what site they would like to remove and then calls the remove site method
-    //REQUIRES:
     private void removeSite() {
         System.out.print("What site do you want to remove: ");
         String site = scan.nextLine();
@@ -160,9 +148,7 @@ public class UI {
         System.out.println("Site removed");
     }
 
-    //MODIFIES:
     //EFFECTS: checks what the user would like to remove and calls appropriate method
-    //REQUIRES:
     private void remove() {
         System.out.print("Are you removing data or site: ");
         String choice = scan.nextLine();
@@ -177,9 +163,7 @@ public class UI {
         } while (!choice.equals("data") && !choice.equals("site"));
     }
 
-    //MODIFIES:
     //EFFECTS: asks user what data they will like displayed and display it
-    //REQUIRES:
     private void display() {
         System.out.println("What do you want to display all/sites/info: ");
         switch (scan.nextLine()) {
@@ -206,9 +190,8 @@ public class UI {
         }
     }
 
-    //MODIFIES: PasswordManager
+    //MODIFIES: this
     //EFFECTS: checks what option the user chooses after they log in and call appropriate method for that option
-    //REQUIRES:
     private void afterLoginChoice(String choice) {
         switch (choice) {
             case "add":
