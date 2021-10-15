@@ -1,11 +1,11 @@
 package model;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.security.NoSuchAlgorithmException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LoginInformationTest {
 
@@ -29,6 +29,8 @@ class LoginInformationTest {
 
         //checks if data integrity is maintained
         assertEquals(info1.getChecksum(),"6456995169d55fc8115b948d55511f665936578d");
+
+        assertTrue(info1.checksumCheck("bob123" + "no matter the cost"));
 
     }
 
