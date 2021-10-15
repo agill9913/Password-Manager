@@ -5,6 +5,8 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
 
+//Referenced this code to make the class: https://www.quickprogrammingtips.com/java/how-to-encrypt-and-decrypt-data-in-java-using-aes-algorithm.html
+
 //Represents a cipher that uses AES to encrypt strings
 public class AES {
 
