@@ -23,7 +23,7 @@ public class LoginInformation {
         return checksum;
     }
 
-    public boolean checksumCheck(String hashValue) {
+    private boolean checksumCheck(String hashValue) {
         return checksum.equals(hashGenerator.getHash(hashValue));
     }
 
