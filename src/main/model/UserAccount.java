@@ -3,6 +3,8 @@ package model;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
+
+//Represents a user account which has the login information, their saved data and a unique AES cipher for their data
 public class UserAccount {
 
     private final LoginInformation userCred;
@@ -22,7 +24,7 @@ public class UserAccount {
     //EFFECTS: returns 0 if credentials match given credentials match saved, 1 if data matches but checksum is changed
     //otherwise -1 if no match
     //REQUIRES:
-    public int checkLoginCreds(String username, String password) {
+    public boolean checkLoginCreds(String username, String password) {
         return userCred.checkValues(username, password);
     }
 

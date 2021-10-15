@@ -3,13 +3,14 @@ package model;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+//Represents a password manager that has multiple accounts that have their own data
 public class PasswordManager {
 
     private ArrayList<UserAccount> accounts;
     private UserAccount currUser;
 
     //MODIFIES: this
-    //EFFECTS: initialize pmanager with a new ArrayList and current user set to null
+    //EFFECTS: initialize PasswordManager with a new ArrayList and current user set to null
     //REQUIRES:
     public PasswordManager() {
         accounts = new ArrayList<>();
@@ -70,7 +71,7 @@ public class PasswordManager {
     //REQUIRES:
     public boolean checkLogin(String username, String password) {
         for (UserAccount user: accounts) {
-            if (user.checkLoginCreds(username, password) != -1) {
+            if (user.checkLoginCreds(username, password)) {
                 currUser = user;
                 return true;
             }

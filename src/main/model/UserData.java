@@ -2,6 +2,8 @@ package model;
 
 import java.util.HashMap;
 
+
+//represents the users saved data which has credentials and other information for various sites
 public class UserData {
     private HashMap<String, HashMap<String, byte[]>> dataMap;
 

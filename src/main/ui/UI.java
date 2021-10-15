@@ -5,25 +5,28 @@ import model.PasswordManager;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
-public class UI implements LoginUI {
+
+//creates a UI to allow the user to use the Password Manager
+public class UI {
 
     private final Scanner scan;
     private boolean running;
     private PasswordManager passManager;
 
     //MODIFIES: this
-    //EFFECTS: initializes a new UI object
+    //EFFECTS: initializes a new UI object and call the init method to start the password manager
     //REQUIRES:
     UI() {
         scan = new Scanner(System.in);
         running = true;
         passManager = new PasswordManager();
+        start();
     }
 
     //MODIFIES:
     //EFFECTS: creates a welcome UI and menu on startup
     //REQUIRES:
-    public void init() {
+    public void start() {
         System.out.println("Welcome to Password Manager");
         while (running) {
             System.out.println("login/register/exit");
@@ -90,7 +93,7 @@ public class UI implements LoginUI {
         }
     }
 
-    //MODIFIES: PManager
+    //MODIFIES: PasswordManager
     //EFFECTS: gets information that the user wants to save and call the save method
     //REQUIRES:
     private void addInformation() {
@@ -203,7 +206,7 @@ public class UI implements LoginUI {
         }
     }
 
-    //MODIFIES: PManager
+    //MODIFIES: PasswordManager
     //EFFECTS: checks what option the user chooses after they log in and call appropriate method for that option
     //REQUIRES:
     private void afterLoginChoice(String choice) {
