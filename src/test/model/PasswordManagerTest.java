@@ -12,12 +12,12 @@ public class PasswordManagerTest {
     PasswordManager manager1;
 
     @BeforeEach
-    public void init() {
+    public void runBefore() {
         manager1 = new PasswordManager();
     }
 
     @Test
-    public void addUserTest() throws NoSuchAlgorithmException {
+    public void testAddUser() throws NoSuchAlgorithmException {
         assertFalse(manager1.isLoggedIn());
         manager1.addUser("Bob", "Joe");
         assertTrue(manager1.checkLogin("Bob", "Joe"));
@@ -28,7 +28,23 @@ public class PasswordManagerTest {
     }
 
     @Test
-    public void addingInfoTest() throws Exception {
+    public void testDifferentUsers() throws Exception {
+        manager1.addUser("Bob", "Joe");
+        manager1.addUser("Jane", "Joe");
+        manager1.checkLogin("Bob", "Joe");
+        manager1.addInfo("google", "username", "user123");
+        manager1.addInfo("google", "password", "pswd123");
+        manager1.userLoggedOut();
+        manager1.checkLogin("Jane", "Joe");
+        manager1.addInfo("Amazon", "username", "user987");
+        assertEquals("Amazon\n\tusername: user987\n", manager1.displayAllInfo());
+        manager1.userLoggedOut();
+        manager1.checkLogin("Bob", "Joe");
+        assertEquals("google\n\tpassword: pswd123\n\tusername: user123\n", manager1.displayAllInfo());
+    }
+
+    @Test
+    public void testAddingInfo() throws Exception {
         manager1.addUser("Bob", "Joe");
         manager1.checkLogin("Bob", "Joe");
         manager1.addSite("google");
@@ -41,7 +57,7 @@ public class PasswordManagerTest {
     }
 
     @Test
-    public void addingInfoToEmpty() throws Exception {
+    public void testAddingInfoToEmpty() throws Exception {
         manager1.addUser("Bob", "Joe");
         manager1.checkLogin("Bob", "Joe");
         manager1.addInfo("google", "username", "user123");
@@ -50,7 +66,7 @@ public class PasswordManagerTest {
     }
 
     @Test
-    public void removingInfoTest() throws Exception {
+    public void testRemovingInfo() throws Exception {
         manager1.addUser("Bob", "Joe");
         manager1.checkLogin("Bob", "Joe");
         manager1.addSite("google");
@@ -64,7 +80,7 @@ public class PasswordManagerTest {
     }
 
     @Test
-    public void removingSiteTest() throws Exception {
+    public void testRemovingSite() throws Exception {
         manager1.addUser("Bob", "Joe");
         manager1.checkLogin("Bob", "Joe");
         manager1.addSite("google");
@@ -79,7 +95,7 @@ public class PasswordManagerTest {
     }
 
     @Test
-    public void editInfoTest() throws Exception {
+    public void testEditInfo() throws Exception {
         manager1.addUser("Bob", "Joe");
         manager1.checkLogin("Bob", "Joe");
         manager1.addSite("google");
