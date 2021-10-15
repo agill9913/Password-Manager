@@ -30,9 +30,6 @@ class LoginInformationTest {
         //checks if data integrity is maintained
         assertEquals(info1.getChecksum(),"6456995169d55fc8115b948d55511f665936578d");
 
-        //checks if data has been altered
-        assertNotEquals(info1.checkValues("bob123", "no matter the cost"), 1);
-
     }
 
 }
