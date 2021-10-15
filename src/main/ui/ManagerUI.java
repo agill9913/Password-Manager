@@ -7,14 +7,14 @@ import java.util.Scanner;
 
 
 //creates a UI to allow the user to use the Password Manager
-public class UI {
+public class ManagerUI {
 
     private final Scanner scan;
     private boolean running;
     private PasswordManager passManager;
 
     //EFFECTS: initializes a new UI object and call the init method to start the password manager
-    UI() {
+    ManagerUI() {
         scan = new Scanner(System.in);
         running = true;
         passManager = new PasswordManager();
