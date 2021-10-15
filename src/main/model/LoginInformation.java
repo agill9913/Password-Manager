@@ -2,7 +2,7 @@ package model;
 
 import java.security.NoSuchAlgorithmException;
 
-//represents username and password that will be used for login with a object to hash them with
+//represents username and password that will be used for login with an object to hash them with
 public class LoginInformation {
 
     private final String usernameHash;
