@@ -29,7 +29,7 @@ public class ManagerUI {
             String choice = scan.nextLine().trim();
             checkOptions(choice);
             while (passManager.isLoggedIn()) {
-                System.out.println("add/display/remove/logout");
+                System.out.println("add/display/edit/remove/logout");
                 choice = scan.nextLine().trim();
                 afterLoginChoice(choice);
             }
@@ -150,9 +150,10 @@ public class ManagerUI {
 
     //EFFECTS: checks what the user would like to remove and calls appropriate method
     private void remove() {
-        System.out.print("Are you removing data or site: ");
-        String choice = scan.nextLine();
+        String choice;
         do {
+            System.out.print("Are you removing data or site: ");
+            choice = scan.nextLine();
             if (choice.equals("data")) {
                 removeInfo();
             } else if (choice.equals("site")) {
