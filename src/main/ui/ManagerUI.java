@@ -1,7 +1,11 @@
 package ui;
 
 import model.PasswordManager;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
@@ -12,20 +16,33 @@ public class ManagerUI {
     private final Scanner scan;
     private boolean running;
     private PasswordManager passManager;
+    private JsonWriter writer;
+    private JsonReader reader;
+    private static final String JSON_PATH = "./data/pmanager.json";
 
     //EFFECTS: initializes a new UI object and call the init method to start the password manager
     ManagerUI() {
         scan = new Scanner(System.in);
         running = true;
         passManager = new PasswordManager();
+        writer = new JsonWriter(JSON_PATH);
+        reader = new JsonReader(JSON_PATH);
+        try {
+            passManager = reader.read();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
         start();
+        saveData();
     }
 
     //EFFECTS: creates a welcome UI and menu on startup
     public void start() {
         System.out.println("Welcome to Password Manager");
         while (running) {
-            System.out.println("login/register/exit");
+            System.out.println("login/register/json/exit");
             String choice = scan.nextLine().trim();
             checkOptions(choice);
             while (passManager.isLoggedIn()) {
@@ -36,11 +53,22 @@ public class ManagerUI {
         }
     }
 
+    private void saveData() {
+        try {
+            writer.open();
+            writer.write(passManager);
+            writer.close();
+            System.out.println("File saved to: " + JSON_PATH);
+        } catch (FileNotFoundException e) {
+            System.err.println("Error writing to file");
+        }
+    }
+
     //EFFECTS: asks user for login info and returns true if it matches existing data otherwise false
     public boolean login() {
-        System.out.println("Username:");
+        System.out.print("Username:");
         String username = scan.nextLine().trim();
-        System.out.println("Password:");
+        System.out.print("Password:");
         String password = scan.nextLine().trim();
         if (passManager.checkLogin(username, password)) {
             System.out.println("Welcome " + username);
@@ -59,7 +87,7 @@ public class ManagerUI {
         try {
             passManager.addUser(username, password);
         } catch (NoSuchAlgorithmException e) {
-            System.err.println("An error has occurred");
+            System.err.println("An error has occurred, user couldn't be registered");
         }
     }
 
@@ -78,6 +106,8 @@ public class ManagerUI {
             case "exit":
                 running = false;
                 break;
+            case "json":
+                System.out.println(passManager.toJson().toString());
             default:
                 System.out.println("login - logs user in with username and password");
                 System.out.println("register - creates a new user credential with username and password");
@@ -101,7 +131,7 @@ public class ManagerUI {
             try {
                 passManager.addInfo(site, dataKey, data);
             } catch (Exception e) {
-                System.err.println("An error has occurred");
+                System.err.println("An error has occurred, info couldn't be added");
             }
         }
         System.out.println("Data added");
@@ -124,7 +154,7 @@ public class ManagerUI {
         try {
             passManager.editData(site, key, newData);
         } catch (Exception e) {
-            System.err.println("Error has occurred");
+            System.err.println("Error has occurred, info couldn't be added");
         }
     }
 
@@ -172,10 +202,10 @@ public class ManagerUI {
                 try {
                     System.out.println(passManager.displayAllInfo());
                 } catch (Exception e) {
-                    System.err.println("An error has occurred");
+                    System.err.println("An error has occurred, info couldn't be displayed");
                 }
                 break;
-            case "site":
+            case "sites":
                 System.out.println(passManager.displaySites());
                 break;
             case "info":
@@ -183,7 +213,7 @@ public class ManagerUI {
                 try {
                     System.out.println(passManager.displayInfo(scan.nextLine()));
                 } catch (Exception e) {
-                    System.out.println("An Error has occurred");
+                    System.err.println("An Error has occurred, couldn't access info about site");
                 }
                 break;
             default:

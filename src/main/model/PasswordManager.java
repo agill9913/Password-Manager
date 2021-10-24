@@ -1,10 +1,14 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 //Represents a password manager that has multiple accounts that have their own data
-public class PasswordManager {
+public class PasswordManager implements Writable {
 
     private ArrayList<UserAccount> accounts;
     private UserAccount currUser;
@@ -14,6 +18,16 @@ public class PasswordManager {
     public PasswordManager() {
         accounts = new ArrayList<>();
         currUser = null;
+    }
+
+    public void addUser(UserAccount user) {
+        accounts.add(user);
+    }
+
+    //MODIFIES: this
+    //EFFECTS: adds a user to the user accounts arraylist
+    public void addUser(String username, String password) throws NoSuchAlgorithmException {
+        accounts.add(new UserAccount(username, password));
     }
 
     //EFFECTS: returns false if there's no user being served, true if a user is logged in
@@ -52,12 +66,6 @@ public class PasswordManager {
     }
 
     //MODIFIES: this
-    //EFFECTS: adds a user to the user accounts arraylist
-    public void addUser(String username, String password) throws NoSuchAlgorithmException {
-        accounts.add(new UserAccount(username, password));
-    }
-
-    //MODIFIES: this
     //EFFECTS: returns user exists and matches given login, if yes set them as current user
     public boolean checkLogin(String username, String password) {
         for (UserAccount user: accounts) {
@@ -88,5 +96,18 @@ public class PasswordManager {
     //EFFECTS: returns all info of a site in a user readable string
     public String displayInfo(String site) throws Exception {
         return currUser.siteDataToString(site);
+    }
+
+    private JSONArray accountsToJson() {
+        JSONArray arr = new JSONArray();
+        for (UserAccount acc: accounts) {
+            arr.put(acc.toJson());
+        }
+        return arr;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        return new JSONObject().put("accounts", accountsToJson());
     }
 }

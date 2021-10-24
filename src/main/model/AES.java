@@ -1,9 +1,13 @@
 package model;
 
+import org.json.JSONObject;
+
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 //Represents a cipher that uses AES to encrypt strings
 public class AES {
@@ -11,8 +15,13 @@ public class AES {
     private final SecretKey key;
 
     //EFFECTS: initializes a key to use when encrypting and decrypting data with aes
-    AES() throws NoSuchAlgorithmException {
-        key = makeKey();
+    public AES() throws NoSuchAlgorithmException {
+        key = KeyGenerator.getInstance("AES").generateKey();
+    }
+
+    public AES(String data) throws NoSuchAlgorithmException {
+        byte[] tmpArr = Base64.getDecoder().decode(data);
+        key = new SecretKeySpec(tmpArr, 0, tmpArr.length, "AES");
     }
 
     //MODIFIES: this
@@ -39,4 +48,9 @@ public class AES {
         aes.init(Cipher.DECRYPT_MODE, key);
         return new String(aes.doFinal(cipher));
     }
+
+    public JSONObject toJson() {
+        return new JSONObject().put("key", Base64.getEncoder().encodeToString(key.getEncoded()));
+    }
+
 }
