@@ -13,15 +13,19 @@ public class LoginInformation implements Writable {
     private final Hashing hashGenerator;
 
     //MODIFIES: this
-    //EFFECTS: initialize a LoginInformation with a hashing object and a hash of username, password and checksum
+    //EFFECTS: initialize a LoginInformation with a hashing object and a hash of username and password, for new objects
     public LoginInformation(String username, String password) throws NoSuchAlgorithmException {
         hashGenerator = new Hashing();
         usernameHash = hashGenerator.getHash(username);
         passwordHash = hashGenerator.getHash(password);
     }
 
-    public LoginInformation(String username, String password, byte[] hashGen) throws NoSuchAlgorithmException {
-        hashGenerator = new Hashing(hashGen);
+    //MODIFIES: this
+    //EFFECTS: initialize a LoginInformation with a hashing object and a hash of username and password,
+    //for use with saved JSON data
+    //Note: isHash is used to provide a second constructor of (String, String), there's no use for it
+    public LoginInformation(String username, String password, boolean isHash) throws NoSuchAlgorithmException {
+        hashGenerator = new Hashing();
         usernameHash = username;
         passwordHash = password;
     }
@@ -32,13 +36,18 @@ public class LoginInformation implements Writable {
                 && passwordHash.equals(hashGenerator.getHash(password));
     }
 
+    //EFFECTS: returns a hash of the username and password
+    public String getHash() {
+        return hashGenerator.getHash(usernameHash + passwordHash);
+    }
 
+
+    //EFFECTS: returns a json representation of username and password of this
     @Override
     public JSONObject toJson() {
         JSONObject obj = new JSONObject();
         obj.put("username", usernameHash);
         obj.put("password", passwordHash);
-        obj.put("hashing", hashGenerator.toByteArray());
         return obj;
     }
 }

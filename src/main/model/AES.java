@@ -1,56 +1,63 @@
 package model;
 
-import org.json.JSONObject;
-
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Base64;
 
 //Represents a cipher that uses AES to encrypt strings
 public class AES {
 
-    private final SecretKey key;
+    private SecretKeySpec encryptKey;
 
     //EFFECTS: initializes a key to use when encrypting and decrypting data with aes
-    public AES() throws NoSuchAlgorithmException {
-        key = KeyGenerator.getInstance("AES").generateKey();
-    }
-
-    public AES(String data) throws NoSuchAlgorithmException {
-        byte[] tmpArr = Base64.getDecoder().decode(data);
-        key = new SecretKeySpec(tmpArr, 0, tmpArr.length, "AES");
+    public AES(String pswd) throws NoSuchAlgorithmException {
+        encryptKey = makeKey(pswd);
     }
 
     //MODIFIES: this
-    //EFFECTS: generates an aes key of size 128 and returns it
-    //Reference used for this method =: https://www.baeldung.com/java-aes-encryption-decryption
-    private SecretKey makeKey() throws NoSuchAlgorithmException {
-        KeyGenerator keyMaker = KeyGenerator.getInstance("AES");
-        keyMaker.init(128);
-        return keyMaker.generateKey();
+    //EFFECTS: updates the AES key with appropriate key value
+    public void updateKey(String hash) throws NoSuchAlgorithmException {
+        this.encryptKey = makeKey(hash);
     }
 
-    //EFFECTS: the string is encrypted by an instance of AES then returned as an encrypted byte array
-    //Reference used for this method = https://www.javatpoint.com/aes-256-encryption-in-java
-    public byte[] encrypt(String plain) throws Exception {
-        Cipher aes = Cipher.getInstance("AES");
-        aes.init(Cipher.ENCRYPT_MODE, key);
-        return aes.doFinal(plain.getBytes());
+    //MODIFIES: this
+    //EFFECTS: generates a key for use with AES and returns it
+    //Referenced for this method: https://howtodoinjava.com/java/java-security/java-aes-encryption-example/
+    private SecretKeySpec makeKey(String mykey) throws NoSuchAlgorithmException {
+        SecretKeySpec retKey;
+        byte[] keyArr = mykey.getBytes(StandardCharsets.UTF_8);
+        MessageDigest hash = MessageDigest.getInstance("SHA-1");
+        keyArr = Arrays.copyOf(hash.digest(keyArr), 16);
+        retKey =  new SecretKeySpec(keyArr, "AES");
+        return retKey;
     }
 
-    //EFFECTS: a byte array is decrypted by an instance of AES then returned as a string
-    //Reference used for this method = https://www.javatpoint.com/aes-256-encryption-in-java
-    public String decrypt(byte[] cipher) throws Exception {
-        Cipher aes = Cipher.getInstance("AES");
-        aes.init(Cipher.DECRYPT_MODE, key);
-        return new String(aes.doFinal(cipher));
+    //EFFECTS: returns a string encrypted with AES
+    //Referenced for this method: https://howtodoinjava.com/java/java-security/java-aes-encryption-example/
+    public String encrypt(String value) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException,
+            UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException {
+        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, encryptKey);
+        return Base64.getEncoder().encodeToString(cipher.doFinal(value.getBytes("UTF-8")));
     }
 
-    public JSONObject toJson() {
-        return new JSONObject().put("key", Base64.getEncoder().encodeToString(key.getEncoded()));
+    //REQUIRES: The String "value" is already encrypted by AES
+    //EFFECTS: returns a string decrypted by AES
+    //Referenced for this method: https://howtodoinjava.com/java/java-security/java-aes-encryption-example/
+    public String decrypt(String value) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException,
+            IllegalBlockSizeException, BadPaddingException {
+        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+        cipher.init(Cipher.DECRYPT_MODE, encryptKey);
+        return new String(cipher.doFinal(Base64.getDecoder().decode(value)));
     }
 
 }

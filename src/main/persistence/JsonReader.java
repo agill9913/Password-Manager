@@ -15,6 +15,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.stream.Stream;
 
+//initializes a reader to allow the reading of a json file and transforming its data to an object
 public class JsonReader {
 
     private String source;
@@ -32,6 +33,7 @@ public class JsonReader {
         return addAccounts(jsonObject);
     }
 
+    //EFFECTS: gets the accounts from JSON file and returns a passwordmanager with the accounts added to it
     private PasswordManager addAccounts(JSONObject obj) throws NoSuchAlgorithmException {
         PasswordManager manager = new PasswordManager();
         JSONArray arr = obj.getJSONArray("accounts");
@@ -42,11 +44,12 @@ public class JsonReader {
         return manager;
     }
 
+    //EFFECTS: returns a new LoginInformation with the values from a json file
     private LoginInformation addLoginInfo(JSONObject info) throws NoSuchAlgorithmException {
-        return new LoginInformation(String.valueOf(info.get("username")), String.valueOf(info.get("password")),
-                info.get("hashing").toString().getBytes(StandardCharsets.UTF_8));
+        return new LoginInformation(String.valueOf(info.get("username")), String.valueOf(info.get("password")), true);
     }
 
+    //EFFECTS: returns a hash map of user data, generated from a json file
     private HashMap<String, String> addData(JSONObject data) {
         HashMap<String, String> siteData = new HashMap<>();
         for (String currData: data.keySet()) {
@@ -55,6 +58,7 @@ public class JsonReader {
         return siteData;
     }
 
+    //EFFECTS: returns a hashmap that contains the site name as key and user data hashmap from a json file
     private HashMap<String, HashMap<String, String>> addSite(JSONObject data) {
         HashMap<String, HashMap<String, String>> dataMap = new HashMap<>();
         for (String currData: data.keySet()) {
@@ -63,14 +67,10 @@ public class JsonReader {
         return dataMap;
     }
 
-    private AES addAES(JSONObject data) throws NoSuchAlgorithmException {
-        System.out.println("AES got: " + data.get("key"));
-        return new AES(data.get("key").toString());
-    }
-
+    //EFFECTS: creates a UserAccount from a json file and adds it to a passwordManager object
     private void addUser(PasswordManager manager, JSONObject user) throws NoSuchAlgorithmException {
         UserAccount savedUser = new UserAccount(addLoginInfo((JSONObject) user.get("LoginInfo")),
-                addSite((JSONObject) user.get("data")), addAES((JSONObject) user.get("AES")));
+                addSite((JSONObject) user.get("data")));
         manager.addUser(savedUser);
     }
 

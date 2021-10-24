@@ -3,6 +3,10 @@ package model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,7 +21,7 @@ public class PasswordManagerTest {
     }
 
     @Test
-    public void testAddUser() throws NoSuchAlgorithmException {
+    public void testAddUser() throws Exception {
         assertFalse(manager1.isLoggedIn());
         manager1.addUser("Bob", "Joe");
         assertTrue(manager1.checkLogin("Bob", "Joe"));

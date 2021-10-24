@@ -23,3 +23,7 @@ Langara previously so wanted to do something that could incorporate what I learn
 - As a user, I want to be able to edit the site information saved to my account
 - As a user, I want to be able to delete any credentials and sites that I have saved to my account
 - As a user, I want to be able to have more than one account (for cases like family shared computers)
+
+*Phase 2*
+- As a user, I want to have my data save and encrypt when I log out
+- As a user, I want to have my data load automatically and decrypt when I log in

@@ -4,8 +4,12 @@ import model.PasswordManager;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
@@ -24,15 +28,15 @@ public class ManagerUI {
     ManagerUI() {
         scan = new Scanner(System.in);
         running = true;
-        passManager = new PasswordManager();
         writer = new JsonWriter(JSON_PATH);
         reader = new JsonReader(JSON_PATH);
         try {
             passManager = reader.read();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Previous data not found, loading default");
+            passManager = new PasswordManager();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            System.out.println("An error has occurred " + e);
         }
         start();
         saveData();
@@ -53,6 +57,7 @@ public class ManagerUI {
         }
     }
 
+    //EFFECTS: saves the password manager data to a JSON file
     private void saveData() {
         try {
             writer.open();
@@ -70,9 +75,14 @@ public class ManagerUI {
         String username = scan.nextLine().trim();
         System.out.print("Password:");
         String password = scan.nextLine().trim();
-        if (passManager.checkLogin(username, password)) {
-            System.out.println("Welcome " + username);
-            return true;
+        try {
+            if (passManager.checkLogin(username, password)) {
+                System.out.println("Welcome " + username);
+                return true;
+            }
+        } catch (NoSuchAlgorithmException | InvalidKeyException | BadPaddingException
+                | IllegalBlockSizeException | NoSuchPaddingException e) {
+            e.printStackTrace();
         }
         return false;
     }
@@ -85,9 +95,15 @@ public class ManagerUI {
         System.out.print("Enter a password: ");
         String password = scan.nextLine().trim();
         try {
-            passManager.addUser(username, password);
-        } catch (NoSuchAlgorithmException e) {
-            System.err.println("An error has occurred, user couldn't be registered");
+            if (passManager.checkLogin(username, password)) {
+                System.out.println("User could not be registered");
+            } else {
+                passManager.addUser(username, password);
+                System.out.println("User: " + username + " has been added");
+            }
+        } catch (NoSuchAlgorithmException | InvalidKeyException
+                | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException e) {
+            System.err.println("An error has occured - " + e.toString());
         }
     }
 
@@ -97,7 +113,7 @@ public class ManagerUI {
         switch (choice) {
             case "login":
                 if (!login()) {
-                    System.out.println("Invalid credentials");
+                    System.out.println("Cannot login user");
                 }
                 break;
             case "register":
@@ -131,7 +147,7 @@ public class ManagerUI {
             try {
                 passManager.addInfo(site, dataKey, data);
             } catch (Exception e) {
-                System.err.println("An error has occurred, info couldn't be added");
+                System.err.println("An error has occurred, info couldn't be added - " + e.toString());
             }
         }
         System.out.println("Data added");
@@ -238,7 +254,11 @@ public class ManagerUI {
                 editInfo();
                 break;
             case "logout":
-                passManager.userLoggedOut();
+                try {
+                    passManager.userLoggedOut();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 System.out.println("Invalid option");

@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
+//creates a writer to be able to write a PasswordManager object to a json file
 public class JsonWriter {
 
     private static final int TAB = 4;

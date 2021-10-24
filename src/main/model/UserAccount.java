@@ -3,6 +3,10 @@ package model;
 import org.json.JSONObject;
 import persistence.Writable;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
@@ -12,27 +16,32 @@ public class UserAccount implements Writable {
 
     private final LoginInformation userCred;
     private UserData dataMap;
-    private final AES cipher;
 
-    //EFFECTS: initialize a new UserAccount with a new Hashmap and LoginInformation
+    //EFFECTS: initialize a new UserAccount with a new Hashmap and LoginInformation for new users
     public UserAccount(String name, String pswd) throws NoSuchAlgorithmException {
         userCred = new LoginInformation(name, pswd);
-        dataMap = new UserData();
-        cipher = new AES();
+        dataMap = new UserData(name + pswd);
     }
 
-    public UserAccount(String name, String pswd, byte[] savedHashing,
-                       HashMap<String, HashMap<String, String>> data, AES savedCipher) throws NoSuchAlgorithmException {
-        userCred = new LoginInformation(name, pswd, savedHashing);
-        dataMap = new UserData(data);
-        cipher = new AES();
-    }
-
-    public UserAccount(LoginInformation info, HashMap<String,
-            HashMap<String, String>> data, AES savedCipher) throws NoSuchAlgorithmException {
+    //EFFECTS: initialize a new UserAccount with a new Hashmap and LoginInformation from saved parsed json data
+    public UserAccount(LoginInformation info, HashMap<String, HashMap<String, String>> data)
+            throws NoSuchAlgorithmException {
         userCred = info;
-        dataMap = new UserData(data);
-        cipher = new AES();
+        dataMap = new UserData(data, info.getHash());
+    }
+
+    //EFFECTS: Updates the AES key and decrypts the data with said key
+    //MODIFIES: this
+    public void updateData(String hash) throws NoSuchAlgorithmException, NoSuchPaddingException,
+            IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
+        dataMap.updateKey(hash);
+        dataMap.decryptData();
+    }
+
+    //EFFECTS: encrypts the users data
+    //MODIFIES: this
+    public void closeData() throws Exception {
+        dataMap.encryptData();
     }
 
     //EFFECTS: returns true if credentials given match credentials saved, false otherwise
@@ -41,7 +50,7 @@ public class UserAccount implements Writable {
     }
 
     //EFFECTS: returns entire dataMap in a user readable string
-    public String allDataToString() throws Exception {
+    public String allDataToString() {
         StringBuilder retVal = new StringBuilder();
         HashMap<String, String> currentSite;
         for (String site : dataMap.getAllSites()) {
@@ -65,7 +74,7 @@ public class UserAccount implements Writable {
     }
 
     //EFFECTS: returns data of a specific site in a user readable string
-    public String siteDataToString(String site) throws Exception {
+    public String siteDataToString(String site) {
         StringBuilder retVal = new StringBuilder();
         HashMap<String, String> data = dataMap.getSiteMap(site);
         for (String key: data.keySet()) {
@@ -83,13 +92,13 @@ public class UserAccount implements Writable {
 
     //MODIFIES: this
     //EFFECTS: adds data to a site in dataMap
-    public void addData(String site, String key, String data) throws Exception {
+    public void addData(String site, String key, String data) {
         dataMap.addData(site, key, data);
     }
 
     //MODIFIES: this
     //EFFECTS: edits data in site from dataMap
-    public void editData(String site, String key, String data) throws Exception {
+    public void editData(String site, String key, String data) {
         dataMap.editData(site, key, data);
     }
 
@@ -105,13 +114,12 @@ public class UserAccount implements Writable {
         dataMap.removeData(site, key);
     }
 
-
+    //EFFECTS: returns a new json object representation of this
     @Override
     public JSONObject toJson() {
         JSONObject obj = new JSONObject();
         obj.put("LoginInfo", userCred.toJson());
         obj.put("data", dataMap.toJson());
-        obj.put("AES", cipher.toJson());
         return obj;
     }
 }

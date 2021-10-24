@@ -4,6 +4,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writable;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
@@ -20,6 +24,8 @@ public class PasswordManager implements Writable {
         currUser = null;
     }
 
+    //MODIFIES: this
+    //EFFECTS: adds a new user to the accounts
     public void addUser(UserAccount user) {
         accounts.add(user);
     }
@@ -43,13 +49,13 @@ public class PasswordManager implements Writable {
 
     //MODIFIES: this
     //EFFECTS: adds new info to a site in user account
-    public void addInfo(String site, String key, String info) throws Exception {
+    public void addInfo(String site, String key, String info) {
         currUser.addData(site, key, info);
     }
 
     //MODIFIES: this
     //EFFECTS: edits existing site data with newData
-    public void editData(String site, String key, String newData) throws Exception {
+    public void editData(String site, String key, String newData) {
         currUser.editData(site, key, newData);
     }
 
@@ -67,10 +73,12 @@ public class PasswordManager implements Writable {
 
     //MODIFIES: this
     //EFFECTS: returns user exists and matches given login, if yes set them as current user
-    public boolean checkLogin(String username, String password) {
+    public boolean checkLogin(String username, String password) throws NoSuchAlgorithmException, NoSuchPaddingException,
+            IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         for (UserAccount user: accounts) {
             if (user.checkLoginCreds(username, password)) {
                 currUser = user;
+                currUser.updateData(username + password);
                 return true;
             }
         }
@@ -79,12 +87,13 @@ public class PasswordManager implements Writable {
 
     //MODIFIES: this
     //EFFECTS: sets current user to null when they log out
-    public void userLoggedOut() {
+    public void userLoggedOut() throws Exception {
+        currUser.closeData();
         currUser = null;
     }
 
     //EFFECTS: returns user readable string of all sites and their data
-    public String displayAllInfo() throws Exception {
+    public String displayAllInfo() {
         return currUser.allDataToString();
     }
 
@@ -94,10 +103,11 @@ public class PasswordManager implements Writable {
     }
 
     //EFFECTS: returns all info of a site in a user readable string
-    public String displayInfo(String site) throws Exception {
+    public String displayInfo(String site) {
         return currUser.siteDataToString(site);
     }
 
+    //EFFECTS: returns a JSON array representation of the accounts
     private JSONArray accountsToJson() {
         JSONArray arr = new JSONArray();
         for (UserAccount acc: accounts) {
@@ -106,6 +116,7 @@ public class PasswordManager implements Writable {
         return arr;
     }
 
+    //EFFECTS: returns a json objects of the accounts in password manager
     @Override
     public JSONObject toJson() {
         return new JSONObject().put("accounts", accountsToJson());
