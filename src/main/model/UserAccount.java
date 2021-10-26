@@ -38,7 +38,7 @@ public class UserAccount implements Writable {
         dataMap.decryptData();
     }
 
-    //EFFECTS: encrypts the users data
+    //EFFECTS: encrypts the user's data
     //MODIFIES: this
     public void closeData() throws Exception {
         dataMap.encryptData();

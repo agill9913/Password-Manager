@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 //creates a writer to be able to write a PasswordManager object to a json file
+//Class is referenced from class demo code taken from:
+//https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo/blob/master/src/main/persistence/JsonWriter.java
 public class JsonWriter {
 
     private static final int TAB = 4;

@@ -1,6 +1,5 @@
 package persistence;
 
-import model.AES;
 import model.LoginInformation;
 import model.PasswordManager;
 import model.UserAccount;
@@ -16,6 +15,8 @@ import java.util.HashMap;
 import java.util.stream.Stream;
 
 //initializes a reader to allow the reading of a json file and transforming its data to an object
+//Class is referenced from class demo code taken from:
+//https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo/blob/master/src/main/persistence/JsonReader.java
 public class JsonReader {
 
     private String source;
@@ -25,7 +26,7 @@ public class JsonReader {
         this.source = source;
     }
 
-    // EFFECTS: reads workroom from file and returns it;
+    // EFFECTS: reads PasswordManager from file and returns it;
     // throws IOException if an error occurs reading data from file
     public PasswordManager read() throws IOException, NoSuchAlgorithmException {
         String jsonData = readFile(source);
@@ -46,7 +47,8 @@ public class JsonReader {
 
     //EFFECTS: returns a new LoginInformation with the values from a json file
     private LoginInformation addLoginInfo(JSONObject info) throws NoSuchAlgorithmException {
-        return new LoginInformation(String.valueOf(info.get("username")), String.valueOf(info.get("password")), true);
+        return new LoginInformation(String.valueOf(info.get("username")),
+                String.valueOf(info.get("password")), false);
     }
 
     //EFFECTS: returns a hash map of user data, generated from a json file
@@ -67,6 +69,7 @@ public class JsonReader {
         return dataMap;
     }
 
+    //MODIFIES: manager
     //EFFECTS: creates a UserAccount from a json file and adds it to a passwordManager object
     private void addUser(PasswordManager manager, JSONObject user) throws NoSuchAlgorithmException {
         UserAccount savedUser = new UserAccount(addLoginInfo((JSONObject) user.get("LoginInfo")),
