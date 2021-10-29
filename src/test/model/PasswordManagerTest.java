@@ -147,10 +147,14 @@ public class PasswordManagerTest {
             manager1.addUser("Jane", "Doe");
             JSONObject testObj = manager1.toJson();
             JSONArray testArray = testObj.getJSONArray("accounts");
-            assertNotEquals(testArray.getJSONObject(0).getJSONObject("LoginInfo").get("username"), "Bob");
-            assertNotEquals(testArray.getJSONObject(0).getJSONObject("LoginInfo").get("password"), "Joe");
-            assertNotEquals(testArray.getJSONObject(1).getJSONObject("LoginInfo").get("username"), "Jane");
-            assertNotEquals(testArray.getJSONObject(1).getJSONObject("LoginInfo").get("username"), "Doe");
+            assertEquals(testArray.getJSONObject(0).getJSONObject("LoginInfo").get("username"),
+                    "da6645f6e22bf5f75974dc7eed5fcd6160d6b51e");
+            assertEquals(testArray.getJSONObject(0).getJSONObject("LoginInfo").get("password"),
+                    "89661149f1b62ff47dd5a6fe4f979c9f53f619b6");
+            assertEquals(testArray.getJSONObject(1).getJSONObject("LoginInfo").get("username"),
+                    "1b78097fcf82ab0445ae892d380c29ccb5405620");
+            assertEquals(testArray.getJSONObject(1).getJSONObject("LoginInfo").get("password"),
+                    "c947ad320e66fc64998e86a55c0da210c8c1d81a");
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | UnsupportedEncodingException
                 | IllegalBlockSizeException | BadPaddingException | InvalidKeyException e) {
             fail("You were not supposed to reach this");
