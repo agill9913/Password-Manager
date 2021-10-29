@@ -22,7 +22,7 @@ public class ManagerUI {
     private PasswordManager passManager;
     private JsonWriter writer;
     private JsonReader reader;
-    private static final String JSON_PATH = "./data/ImEmptyAndLonely.json";
+    private static final String JSON_PATH = "./data/PManager.json";
 
     //EFFECTS: initializes a new UI object and call the init method to start the password manager
     ManagerUI() {
