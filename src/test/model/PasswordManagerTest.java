@@ -64,14 +64,16 @@ public class PasswordManagerTest {
     }
 
     @Test
-    public void testAddSameSite() {
+    public void testAddSameData() {
         try {
             manager1.addUser("Bob", "Joe");
             manager1.checkLogin("Bob", "Joe");
             manager1.addSite("google");
             manager1.addInfo("google", "username", "user1");
             manager1.addInfo("google", "username", "user2");
-            assertEquals("google\n\tusername2: user2\n\tusername: user1\n", manager1.displayAllInfo());
+            manager1.addInfo("google", "username", "user3");
+            assertEquals("google\n\tusername3: user3\n\tusername2: user2\n\tusername: user1\n",
+                    manager1.displayAllInfo());
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException
                 | InvalidKeyException e) {
             fail("something went wrong");
@@ -79,7 +81,7 @@ public class PasswordManagerTest {
     }
 
     @Test
-    public void testAddSameData() {
+    public void testAddSameSite() {
         try {
             manager1.addUser("Bob", "Joe");
             manager1.checkLogin("Bob", "Joe");
