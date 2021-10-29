@@ -47,7 +47,7 @@ public class ManagerUI {
     public void start() {
         System.out.println("Welcome to Password Manager");
         while (running) {
-            System.out.println("login/register/json/load/exit");
+            System.out.println("login/register/load/exit");
             String choice = scan.nextLine().trim();
             checkOptions(choice);
             while (passManager.isLoggedIn()) {
