@@ -108,14 +108,11 @@ public class UserData implements Writable {
         }
     }
 
+    //REQUIRES: key and site exist in hashmap
     //MODIFIES: this
     //EFFECTS: edits data in site from dataMap
     public void editData(String site, String key, String data) {
-        if (dataMap.containsKey(site)) {
-            if (dataMap.get(site).containsKey(key)) {
-                dataMap.get(site).replace(key, data);
-            }
-        }
+        dataMap.get(site).replace(key, data);
     }
 
     //MODIFIES: this

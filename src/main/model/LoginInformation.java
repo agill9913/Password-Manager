@@ -13,21 +13,18 @@ public class LoginInformation implements Writable {
     private final Hashing hashGenerator;
 
     //MODIFIES: this
-    //EFFECTS: initialize a LoginInformation with a hashing object and a hash of username and password, for new objects
-    public LoginInformation(String username, String password) throws NoSuchAlgorithmException {
-        hashGenerator = new Hashing();
-        usernameHash = hashGenerator.getHash(username);
-        passwordHash = hashGenerator.getHash(password);
-    }
-
-    //MODIFIES: this
     //EFFECTS: initialize a LoginInformation with a hashing object and a hash of username and password,
     //for use with saved JSON data
     //Note: isHash is used to provide a second constructor of (String, String), there's no use for it
-    public LoginInformation(String username, String password, boolean isHash) throws NoSuchAlgorithmException {
+    public LoginInformation(String username, String password, boolean isNew) throws NoSuchAlgorithmException {
         hashGenerator = new Hashing();
-        usernameHash = username;
-        passwordHash = password;
+        if (isNew) {
+            usernameHash = hashGenerator.getHash(username);
+            passwordHash = hashGenerator.getHash(password);
+        } else {
+            usernameHash = username;
+            passwordHash = password;
+        }
     }
 
     //EFFECTS: returns true if given username and password match saved hash, false otherwise

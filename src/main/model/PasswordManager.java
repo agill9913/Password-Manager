@@ -33,7 +33,7 @@ public class PasswordManager implements Writable {
     //MODIFIES: this
     //EFFECTS: adds a user to the user accounts arraylist
     public void addUser(String username, String password) throws NoSuchAlgorithmException {
-        accounts.add(new UserAccount(username, password));
+        accounts.add(new UserAccount(username, password, true));
     }
 
     //EFFECTS: returns false if there's no user being served, true if a user is logged in
@@ -41,30 +41,35 @@ public class PasswordManager implements Writable {
         return currUser != null;
     }
 
+    //REQUIRES: user has logged in
     //MODIFIES: this
     //EFFECTS: adds a new site hashmap to the current user's account
     public void addSite(String site) {
         currUser.addSite(site);
     }
 
+    //REQUIRES: user has logged in
     //MODIFIES: this
     //EFFECTS: adds new info to a site in user account
     public void addInfo(String site, String key, String info) {
         currUser.addData(site, key, info);
     }
 
+    //REQUIRES: user has logged in
     //MODIFIES: this
     //EFFECTS: edits existing site data with newData
     public void editData(String site, String key, String newData) {
         currUser.editData(site, key, newData);
     }
 
+    //REQUIRES: user has logged in
     //MODIFIES: this
     //EFFECTS: removes data from a site in a user account
     public void removeData(String site, String key) {
         currUser.removeData(site, key);
     }
 
+    //REQUIRES: user has logged in
     //MODIFIES: this
     //EFFECTS: removes a site, and it's data from a user account
     public void removeSite(String site) {
@@ -85,6 +90,7 @@ public class PasswordManager implements Writable {
         return false;
     }
 
+    //REQUIRES: user has logged in
     //MODIFIES: this
     //EFFECTS: sets current user to null when they log out
     public void userLoggedOut() throws Exception {
@@ -92,19 +98,26 @@ public class PasswordManager implements Writable {
         currUser = null;
     }
 
+    //REQUIRES: user has logged in
     //EFFECTS: returns user readable string of all sites and their data
     public String displayAllInfo() {
         return currUser.allDataToString();
     }
 
+    //REQUIRES: user has logged in
     //EFFECTS: returns only the sites that are saved in a user readable string
     public String displaySites() {
         return currUser.sitesToString();
     }
 
+    //REQUIRES: user has logged in
     //EFFECTS: returns all info of a site in a user readable string
     public String displayInfo(String site) {
         return currUser.siteDataToString(site);
+    }
+
+    public int userCount() {
+        return accounts.size();
     }
 
     //EFFECTS: returns a JSON array representation of the accounts

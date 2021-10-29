@@ -18,8 +18,8 @@ public class UserAccount implements Writable {
     private UserData dataMap;
 
     //EFFECTS: initialize a new UserAccount with a new Hashmap and LoginInformation for new users
-    public UserAccount(String name, String pswd) throws NoSuchAlgorithmException {
-        userCred = new LoginInformation(name, pswd);
+    public UserAccount(String name, String pswd, boolean isNew) throws NoSuchAlgorithmException {
+        userCred = new LoginInformation(name, pswd, isNew);
         dataMap = new UserData(name + pswd);
     }
 

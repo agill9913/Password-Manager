@@ -22,7 +22,7 @@ public class ManagerUI {
     private PasswordManager passManager;
     private JsonWriter writer;
     private JsonReader reader;
-    private static final String JSON_PATH = "./data/pmanager.json";
+    private static final String JSON_PATH = "./data/ImEmptyAndLonely.json";
 
     //EFFECTS: initializes a new UI object and call the init method to start the password manager
     ManagerUI() {
@@ -36,7 +36,7 @@ public class ManagerUI {
             System.out.println("Previous data not found, loading default");
             passManager = new PasswordManager();
         } catch (NoSuchAlgorithmException e) {
-            System.out.println("An error has occurred " + e);
+            System.err.println("An error has occurred " + e);
         }
         start();
         saveData();
@@ -46,14 +46,27 @@ public class ManagerUI {
     public void start() {
         System.out.println("Welcome to Password Manager");
         while (running) {
-            System.out.println("login/register/json/exit");
+            System.out.println("login/register/json/load/exit");
             String choice = scan.nextLine().trim();
             checkOptions(choice);
             while (passManager.isLoggedIn()) {
-                System.out.println("add/display/edit/remove/logout");
+                System.out.println("add/display/edit/remove/save/logout");
                 choice = scan.nextLine().trim();
                 afterLoginChoice(choice);
             }
+        }
+    }
+
+    private void loadData() {
+        System.out.println("What is the name of the data you would like to load: ");
+        String srcFile = "./data/" + scan.nextLine() + ".json";
+        JsonReader readFile = new JsonReader(srcFile);
+        try {
+            passManager = readFile.read();
+        } catch (IOException e) {
+            System.err.println("Unable to read file");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
     }
 
@@ -66,6 +79,20 @@ public class ManagerUI {
             System.out.println("File saved to: " + JSON_PATH);
         } catch (FileNotFoundException e) {
             System.err.println("Error writing to file");
+        }
+    }
+
+    //EFFECTS: saves the password manager data to a JSON file
+    private void saveData(String fname) {
+        String destFile = "./data/" + fname + ".json";
+        JsonWriter newFile = new JsonWriter(destFile);
+        try {
+            newFile.open();
+            newFile.write(passManager);
+            newFile.close();
+            System.out.println("File saved to: " + destFile);
+        } catch (FileNotFoundException e) {
+            System.err.println("Error writing to " + destFile);
         }
     }
 
@@ -124,6 +151,10 @@ public class ManagerUI {
                 break;
             case "json":
                 System.out.println(passManager.toJson().toString());
+                break;
+            case "load":
+                loadData();
+                break;
             default:
                 System.out.println("login - logs user in with username and password");
                 System.out.println("register - creates a new user credential with username and password");
@@ -140,7 +171,7 @@ public class ManagerUI {
         System.out.print("How many items are you saving: ");
         int numOfItems = Integer.parseInt(scan.nextLine());
         for (int i = 0; i < numOfItems; i++) {
-            System.out.print("What is the category of what you are saving: ");
+            System.out.print("What is the category of item " + i + ": ");
             String dataKey = scan.nextLine();
             System.out.print("What is the data: ");
             String data = scan.nextLine();
@@ -237,31 +268,36 @@ public class ManagerUI {
         }
     }
 
+    private void saveToFile() {
+        System.out.print("Name of file to save: ");
+        saveData(scan.nextLine());
+    }
+
+    private void logOutUser() {
+        try {
+            passManager.userLoggedOut();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     //MODIFIES: this
     //EFFECTS: checks what option the user chooses after they log in and call appropriate method for that option
     private void afterLoginChoice(String choice) {
-        switch (choice) {
-            case "add":
-                addInformation();
-                break;
-            case "display":
-                display();
-                break;
-            case "remove":
-                remove();
-                break;
-            case "edit":
-                editInfo();
-                break;
-            case "logout":
-                try {
-                    passManager.userLoggedOut();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            default:
-                System.out.println("Invalid option");
+        if (choice.equals("add")) {
+            addInformation();
+        } else if (choice.equals("display")) {
+            display();
+        } else if (choice.equals("remove")) {
+            remove();
+        } else if (choice.equals("edit")) {
+            editInfo();
+        } else if (choice.equals("logout")) {
+            logOutUser();
+        } else if (choice.equals("save")) {
+            saveToFile();
+        } else {
+            System.out.println("Invalid option");
         }
     }
 }
