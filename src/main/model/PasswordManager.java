@@ -7,6 +7,7 @@ import persistence.Writable;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -121,7 +122,8 @@ public class PasswordManager implements Writable {
     }
 
     //EFFECTS: returns a JSON array representation of the accounts
-    private JSONArray accountsToJson() {
+    private JSONArray accountsToJson() throws NoSuchPaddingException, UnsupportedEncodingException,
+            IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         JSONArray arr = new JSONArray();
         for (UserAccount acc: accounts) {
             arr.put(acc.toJson());
@@ -131,7 +133,8 @@ public class PasswordManager implements Writable {
 
     //EFFECTS: returns a json objects of the accounts in password manager
     @Override
-    public JSONObject toJson() {
+    public JSONObject toJson() throws NoSuchPaddingException, UnsupportedEncodingException,
+            IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         return new JSONObject().put("accounts", accountsToJson());
     }
 }

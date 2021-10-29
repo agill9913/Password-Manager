@@ -128,13 +128,8 @@ public class UserData implements Writable {
     }
 
     @Override
-    public JSONObject toJson() {
-        try {
-            encryptData();
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException | UnsupportedEncodingException
-                | IllegalBlockSizeException | BadPaddingException | InvalidKeyException e) {
-            e.printStackTrace();
-        }
+    public JSONObject toJson() throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        encryptData();
         return new JSONObject(dataMap);
     }
 }

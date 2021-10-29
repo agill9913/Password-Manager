@@ -6,6 +6,7 @@ import persistence.Writable;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -116,7 +117,7 @@ public class UserAccount implements Writable {
 
     //EFFECTS: returns a new json object representation of this
     @Override
-    public JSONObject toJson() {
+    public JSONObject toJson() throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         JSONObject obj = new JSONObject();
         obj.put("LoginInfo", userCred.toJson());
         obj.put("data", dataMap.toJson());

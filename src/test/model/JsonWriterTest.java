@@ -4,8 +4,12 @@ import org.junit.jupiter.api.Test;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,6 +46,8 @@ public class JsonWriterTest {
             fail("IOException occurred");
         } catch (NoSuchAlgorithmException e) {
             fail("Something happened in AES or Hashing");
+        } catch (NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException | InvalidKeyException e) {
+            fail("Something happened in toJson");
         }
     }
 

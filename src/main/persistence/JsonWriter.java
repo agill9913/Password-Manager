@@ -4,9 +4,15 @@ import model.PasswordManager;
 import model.UserAccount;
 import org.json.JSONObject;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 //creates a writer to be able to write a PasswordManager object to a json file
 //Class is referenced from class demo code taken from:
@@ -31,7 +37,8 @@ public class JsonWriter {
 
     // MODIFIES: this
     // EFFECTS: writes JSON representation of workroom to file
-    public void write(PasswordManager manager) {
+    public void write(PasswordManager manager) throws NoSuchPaddingException, UnsupportedEncodingException,
+            IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         JSONObject json = manager.toJson();
         saveToFile(json.toString(TAB));
     }

@@ -9,6 +9,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
@@ -79,6 +80,9 @@ public class ManagerUI {
             System.out.println("File saved to: " + JSON_PATH);
         } catch (FileNotFoundException e) {
             System.err.println("Error writing to file");
+        } catch (NoSuchPaddingException | UnsupportedEncodingException | IllegalBlockSizeException
+                | NoSuchAlgorithmException | BadPaddingException | InvalidKeyException e) {
+            System.err.println("An error occured");
         }
     }
 
@@ -93,6 +97,9 @@ public class ManagerUI {
             System.out.println("File saved to: " + destFile);
         } catch (FileNotFoundException e) {
             System.err.println("Error writing to " + destFile);
+        } catch (NoSuchPaddingException | UnsupportedEncodingException | IllegalBlockSizeException
+                | NoSuchAlgorithmException | BadPaddingException | InvalidKeyException e) {
+            System.err.println("An error has occurred");
         }
     }
 
@@ -148,9 +155,6 @@ public class ManagerUI {
                 break;
             case "exit":
                 running = false;
-                break;
-            case "json":
-                System.out.println(passManager.toJson().toString());
                 break;
             case "load":
                 loadData();
