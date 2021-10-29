@@ -9,7 +9,8 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-//Class is referenced from class demo code taken from
+//interface for method to convert object to a jsonobject
+//Interface is referenced from class demo code taken from
 //https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo/blob/master/src/main/persistence/Writable.java
 public interface Writable {
     JSONObject toJson() throws NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException,

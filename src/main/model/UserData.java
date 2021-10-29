@@ -127,6 +127,7 @@ public class UserData implements Writable {
         dataMap.get(site).remove(key);
     }
 
+    //EFFECTS: returns this object's dataMap in a jsonobject
     @Override
     public JSONObject toJson() throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException,
             NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {

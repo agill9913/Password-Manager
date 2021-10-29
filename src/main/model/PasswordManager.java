@@ -117,6 +117,7 @@ public class PasswordManager implements Writable {
         return currUser.siteDataToString(site);
     }
 
+    //EFFECTS: returns the number of accounts saved
     public int userCount() {
         return accounts.size();
     }

@@ -58,6 +58,8 @@ public class ManagerUI {
         }
     }
 
+    //MODIFIES: this
+    //EFFECTS: reads data from a json file and then assigns it to password Manager
     private void loadData() {
         System.out.println("What is the name of the data you would like to load: ");
         String srcFile = "./data/" + scan.nextLine() + ".json";
@@ -272,11 +274,14 @@ public class ManagerUI {
         }
     }
 
+    //EFFECTS: Saves password manager to a json file of user choice
     private void saveToFile() {
         System.out.print("Name of file to save: ");
         saveData(scan.nextLine());
     }
 
+    //EFFECTS: sets current user to null (represents no user being served) and encrypts data
+    //MODIFIES: this
     private void logOutUser() {
         try {
             passManager.userLoggedOut();
