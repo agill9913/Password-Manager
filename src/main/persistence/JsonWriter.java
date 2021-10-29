@@ -1,7 +1,6 @@
 package persistence;
 
 import model.PasswordManager;
-import model.UserAccount;
 import org.json.JSONObject;
 
 import javax.crypto.BadPaddingException;
