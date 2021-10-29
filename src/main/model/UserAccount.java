@@ -117,7 +117,8 @@ public class UserAccount implements Writable {
 
     //EFFECTS: returns a new json object representation of this
     @Override
-    public JSONObject toJson() throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+    public JSONObject toJson() throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException,
+            NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         JSONObject obj = new JSONObject();
         obj.put("LoginInfo", userCred.toJson());
         obj.put("data", dataMap.toJson());
