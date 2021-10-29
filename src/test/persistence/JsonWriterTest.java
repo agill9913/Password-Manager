@@ -1,5 +1,6 @@
-package model;
+package persistence;
 
+import model.PasswordManager;
 import org.junit.jupiter.api.Test;
 import persistence.JsonReader;
 import persistence.JsonWriter;
