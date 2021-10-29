@@ -175,7 +175,7 @@ public class ManagerUI {
         System.out.print("How many items are you saving: ");
         int numOfItems = Integer.parseInt(scan.nextLine());
         for (int i = 0; i < numOfItems; i++) {
-            System.out.print("What is the category of item " + i + ": ");
+            System.out.print("What is the category of item " + (i + 1) + ": ");
             String dataKey = scan.nextLine();
             System.out.print("What is the data: ");
             String data = scan.nextLine();

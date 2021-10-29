@@ -48,6 +48,7 @@ public class JsonReaderTest {
             assertTrue(testManager.checkLogin("armaan", "gill"));
             assertEquals(testManager.displayAllInfo(), "google\n\tpassword: pswd4565\n\tusername: ret45\n");
             testManager.userLoggedOut();
+            //making sure login works
             assertTrue(testManager.checkLogin("armaan", "gill"));
             assertEquals(testManager.displayAllInfo(), "google\n\tpassword: pswd4565\n\tusername: ret45\n");
         } catch (NoSuchAlgorithmException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException
