@@ -61,6 +61,35 @@ public class PasswordManagerTest {
     }
 
     @Test
+    public void testAddSameSite() {
+        try {
+            manager1.addUser("Bob", "Joe");
+            manager1.checkLogin("Bob", "Joe");
+            manager1.addSite("google");
+            manager1.addInfo("google", "username", "user1");
+            manager1.addInfo("google", "username", "user2");
+            assertEquals("google\n\tusername2: user2\n\tusername: user1\n", manager1.displayAllInfo());
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException
+                | InvalidKeyException e) {
+            fail("something went wrong");
+        }
+    }
+
+    @Test
+    public void testAddSameData() {
+        try {
+            manager1.addUser("Bob", "Joe");
+            manager1.checkLogin("Bob", "Joe");
+            manager1.addSite("google");
+            manager1.addSite("google");
+            assertEquals("google\n", manager1.displaySites());
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException
+                | InvalidKeyException e) {
+            fail("something went wrong");
+        }
+    }
+
+    @Test
     public void testAddingInfoToEmpty() throws Exception {
         manager1.addUser("Bob", "Joe");
         manager1.checkLogin("Bob", "Joe");

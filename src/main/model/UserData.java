@@ -98,8 +98,8 @@ public class UserData implements Writable {
             addSite(site);
         }
         if (dataMap.get(site).containsKey(key)) {
-            int i = 1;
-            while (dataMap.get(key).containsKey(key + i)) {
+            int i = 2;
+            while (dataMap.get(site).containsKey(key + i)) {
                 i++;
             }
             dataMap.get(site).put(key + i, data);
