@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class JsonReaderTest {
 
+    //Referenced for test: https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo/blob/master/src/test/persistence/JsonReaderTest.java
     @Test
     public void testNofile() {
         JsonReader readNothing = new JsonReader("./data/IDontExist.json");
@@ -26,6 +27,7 @@ public class JsonReaderTest {
         }
     }
 
+    //Referenced for test: https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo/blob/master/src/test/persistence/JsonReaderTest.java
     @Test
     public void testEmptyFile() {
         JsonReader readEmpty = new JsonReader("./data/persistanceTestData/ImEmptyAndLonely.json");
@@ -39,6 +41,7 @@ public class JsonReaderTest {
         }
     }
 
+    //Referenced for test: https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo/blob/master/src/test/persistence/JsonReaderTest.java
     @Test
     public void testNormalFile() {
         JsonReader readFile = new JsonReader("./data/persistanceTestData/data3.json");

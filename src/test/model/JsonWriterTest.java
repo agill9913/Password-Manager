@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class JsonWriterTest {
 
+    //Reference for test: https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo/blob/master/src/test/persistence/JsonWriterTest.java
     @Test
     public void testInvalidFile() {
         try {
@@ -28,6 +29,7 @@ public class JsonWriterTest {
     }
 
     @Test
+    //Reference for test: https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo/blob/master/src/test/persistence/JsonWriterTest.java
     public void testEmptyFile() {
         String path = "./data/persistanceTestData/emptyReaderTest.json";
         PasswordManager testManager = new PasswordManager();
@@ -51,6 +53,7 @@ public class JsonWriterTest {
         }
     }
 
+    //tests if file is properly encrypted and decrypted when manually saved
     @Test
     public void testSwitchingUsers() {
         String[] username = {"Bob", "John"};
