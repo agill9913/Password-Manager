@@ -180,25 +180,4 @@ public class PasswordManagerTest {
             fail("Something went wrong in AES or Hashing");
         }
     }
-
-    @Test
-    public void testSwitchingUsers() {
-        String[] username = {"Bob", "John"};
-        String[] password = {"Joe", "Doe"};
-        try {
-            manager1.addUser(username[0], password[0]);
-            assertTrue(manager1.checkLogin(username[0], password[0]));
-            manager1.addInfo("google", "username", "user");
-            manager1.addInfo("google", "password", "pswd");
-            manager1.userLoggedOut();
-            manager1.addUser(username[1], password[1]);
-            assertTrue(manager1.checkLogin(username[1], password[1]));
-            manager1.addInfo("amazon", "credit card number", "234234242");
-            manager1.userLoggedOut();
-            assertTrue(manager1.checkLogin(username[0], password[0]));
-            assertEquals("google\n\tpassword: pswd\n\tusername: user\n", manager1.displayAllInfo());
-        } catch (Exception e) {
-            fail("Something went really wrong - nuclear explosion wrong");
-        }
-    }
 }
