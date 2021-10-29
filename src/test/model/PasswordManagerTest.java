@@ -163,4 +163,22 @@ public class PasswordManagerTest {
         }
     }
 
+    @Test
+    public void testLoginThenLogout() {
+        String username = "Bob";
+        String password = "Joe";
+        try {
+            manager1.addUser(username, password);
+            manager1.checkLogin(username, password);
+            manager1.addInfo("google", "username", "user23");
+            manager1.userLoggedOut();
+            manager1.checkLogin(username, password);
+            assertEquals("google\n\tusername: user23\n", manager1.displayAllInfo());
+        } catch (NoSuchAlgorithmException e) {
+            fail("Couldn't find a algorithm exception");
+        } catch (Exception e) {
+            fail("Something went wrong in AES or Hashing");
+        }
+    }
+
 }
