@@ -1,11 +1,14 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -137,7 +140,21 @@ public class PasswordManagerTest {
         assertEquals("username: newUser\n", manager1.displayInfo("google"));
     }
 
-
-
+    @Test
+    public void testMultipleUserstoJson() {
+        try {
+            manager1.addUser("Bob", "Joe");
+            manager1.addUser("Jane", "Doe");
+            JSONObject testObj = manager1.toJson();
+            JSONArray testArray = testObj.getJSONArray("accounts");
+            assertNotEquals(testArray.getJSONObject(0).getJSONObject("LoginInfo").get("username"), "Bob");
+            assertNotEquals(testArray.getJSONObject(0).getJSONObject("LoginInfo").get("password"), "Joe");
+            assertNotEquals(testArray.getJSONObject(1).getJSONObject("LoginInfo").get("username"), "Jane");
+            assertNotEquals(testArray.getJSONObject(1).getJSONObject("LoginInfo").get("username"), "Doe");
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | UnsupportedEncodingException
+                | IllegalBlockSizeException | BadPaddingException | InvalidKeyException e) {
+            fail("You were not supposed to reach this");
+        }
+    }
 
 }
