@@ -46,11 +46,17 @@ public class JsonReaderTest {
             PasswordManager testManager = readFile.read();
             assertEquals(testManager.userCount(), 1);
             assertTrue(testManager.checkLogin("armaan", "gill"));
+            assertEquals(testManager.displayAllInfo(), "google\n\tpassword: pswd4565\n\tusername: ret45\n");
+            testManager.userLoggedOut();
+            assertTrue(testManager.checkLogin("armaan", "gill"));
+            assertEquals(testManager.displayAllInfo(), "google\n\tpassword: pswd4565\n\tusername: ret45\n");
         } catch (NoSuchAlgorithmException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException
                 | NoSuchPaddingException e) {
             fail("Something went really wrong with AES or hashing - should not be possible");
         } catch (IOException e) {
             fail("IOException with file");
+        } catch (Exception e) {
+            fail("Deacon 5 something went wrong - this is really bad");
         }
     }
 }
