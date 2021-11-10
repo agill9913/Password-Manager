@@ -22,7 +22,6 @@ public class ManagerUI {
     private boolean running;
     private PasswordManager passManager;
     private JsonWriter writer;
-    private JsonReader reader;
     private static final String JSON_PATH = "./data/PManager.json";
 
     //EFFECTS: initializes a new UI object and call the init method to start the password manager
@@ -30,7 +29,7 @@ public class ManagerUI {
         scan = new Scanner(System.in);
         running = true;
         writer = new JsonWriter(JSON_PATH);
-        reader = new JsonReader(JSON_PATH);
+        JsonReader reader = new JsonReader(JSON_PATH);
         try {
             passManager = reader.read();
         } catch (IOException e) {
@@ -182,7 +181,7 @@ public class ManagerUI {
             System.out.print("What is the data: ");
             String data = scan.nextLine();
             try {
-                passManager.addInfo(site, dataKey, data);
+                passManager.addData(site, dataKey, data);
             } catch (Exception e) {
                 System.err.println("An error has occurred, info couldn't be added - " + e.toString());
             }
@@ -293,20 +292,27 @@ public class ManagerUI {
     //MODIFIES: this
     //EFFECTS: checks what option the user chooses after they log in and call appropriate method for that option
     private void afterLoginChoice(String choice) {
-        if (choice.equals("add")) {
-            addInformation();
-        } else if (choice.equals("display")) {
-            display();
-        } else if (choice.equals("remove")) {
-            remove();
-        } else if (choice.equals("edit")) {
-            editInfo();
-        } else if (choice.equals("logout")) {
-            logOutUser();
-        } else if (choice.equals("save")) {
-            saveToFile();
-        } else {
-            System.out.println("Invalid option");
+        switch (choice) {
+            case "add":
+                addInformation();
+                break;
+            case "display":
+                display();
+                break;
+            case "remove":
+                remove();
+                break;
+            case "edit":
+                editInfo();
+                break;
+            case "logout":
+                logOutUser();
+                break;
+            case "save":
+                saveToFile();
+                break;
+            default:
+                System.out.println("Invalid option");
         }
     }
 }

@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 
 //Represents a user account which has the login information, their saved data and a unique AES cipher for their data
-public class UserAccount implements Writable {
+public class UserAccount implements Writable, DataOperations {
 
     private final LoginInformation userCred;
     private UserData dataMap;
@@ -87,30 +87,35 @@ public class UserAccount implements Writable {
 
     //MODIFIES: this
     //EFFECTS: adds site to dataMap
+    @Override
     public void addSite(String site) {
         dataMap.addSite(site);
     }
 
     //MODIFIES: this
     //EFFECTS: adds data to a site in dataMap
+    @Override
     public void addData(String site, String key, String data) {
         dataMap.addData(site, key, data);
     }
 
     //MODIFIES: this
     //EFFECTS: edits data in site from dataMap
+    @Override
     public void editData(String site, String key, String data) {
         dataMap.editData(site, key, data);
     }
 
     //MODIFIES: this
     //EFFECTS: removes site from dataMap
+    @Override
     public void removeSite(String site) {
         dataMap.removeSite(site);
     }
 
     //MODIFIES: this
     //EFFECTS: removes data from site in dataMap
+    @Override
     public void removeData(String site, String key) {
         dataMap.removeData(site, key);
     }

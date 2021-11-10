@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 
 //represents the users saved data which has credentials and other information for various sites
-public class UserData implements Writable {
+public class UserData implements Writable, DataOperations {
     private HashMap<String, HashMap<String, String>> dataMap;
     private boolean decrypted;
     private AES encryption;
@@ -39,7 +39,7 @@ public class UserData implements Writable {
         encryption.updateKey(hash);
     }
 
-    //EFFECTS: Encrypts all of the data in the dataMap via AES
+    //EFFECTS: Encrypts all the data in the dataMap via AES
     //MODIFIES: this
     public void encryptData() throws NoSuchPaddingException, UnsupportedEncodingException,
             IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
@@ -53,7 +53,7 @@ public class UserData implements Writable {
         }
     }
 
-    //EFFECTS: Decrypts all of the data in the dataMap userdata via AES
+    //EFFECTS: Decrypts all the data in the dataMap userdata via AES
     //MODIFIES: this
     public void decryptData() throws NoSuchPaddingException,
             IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
@@ -85,6 +85,7 @@ public class UserData implements Writable {
 
     //MODIFIES: this
     //EFFECTS: adds site to dataMap
+    @Override
     public void addSite(String site) {
         if (!dataMap.containsKey(site)) {
             dataMap.put(site, new HashMap<>());
@@ -93,6 +94,7 @@ public class UserData implements Writable {
 
     //MODIFIES: this
     //EFFECTS: adds data to a site in dataMap
+    @Override
     public void addData(String site, String key, String data) {
         if (!dataMap.containsKey(site)) {
             addSite(site);
@@ -111,23 +113,26 @@ public class UserData implements Writable {
     //REQUIRES: key and site exist in hashmap
     //MODIFIES: this
     //EFFECTS: edits data in site from dataMap
+    @Override
     public void editData(String site, String key, String data) {
         dataMap.get(site).replace(key, data);
     }
 
     //MODIFIES: this
     //EFFECTS: removes site from dataMap
+    @Override
     public void removeSite(String site) {
         dataMap.remove(site);
     }
 
     //MODIFIES: this
     //EFFECTS: removes data from site in dataMap
+    @Override
     public void removeData(String site, String key) {
         dataMap.get(site).remove(key);
     }
 
-    //EFFECTS: returns this object's dataMap in a jsonobject
+    //EFFECTS: returns this object's dataMap in a Jsonobject
     @Override
     public JSONObject toJson() throws NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException,
             NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {

@@ -39,11 +39,11 @@ public class PasswordManagerTest {
         manager1.addUser("Bob", "Joe");
         manager1.addUser("Jane", "Joe");
         manager1.checkLogin("Bob", "Joe");
-        manager1.addInfo("google", "username", "user123");
-        manager1.addInfo("google", "password", "pswd123");
+        manager1.addData("google", "username", "user123");
+        manager1.addData("google", "password", "pswd123");
         manager1.userLoggedOut();
         manager1.checkLogin("Jane", "Joe");
-        manager1.addInfo("Amazon", "username", "user987");
+        manager1.addData("Amazon", "username", "user987");
         assertEquals("Amazon\n\tusername: user987\n", manager1.displayAllInfo());
         manager1.userLoggedOut();
         manager1.checkLogin("Bob", "Joe");
@@ -56,7 +56,7 @@ public class PasswordManagerTest {
         manager1.checkLogin("Bob", "Joe");
         manager1.addSite("google");
         assertEquals("google\n", manager1.displaySites());
-        manager1.addInfo("google", "username", "user123");
+        manager1.addData("google", "username", "user123");
         assertEquals("username: user123\n", manager1.displayInfo("google"));
         assertEquals("google\n\tusername: user123\n", manager1.displayAllInfo());
         manager1.addSite("amazon");
@@ -69,9 +69,9 @@ public class PasswordManagerTest {
             manager1.addUser("Bob", "Joe");
             manager1.checkLogin("Bob", "Joe");
             manager1.addSite("google");
-            manager1.addInfo("google", "username", "user1");
-            manager1.addInfo("google", "username", "user2");
-            manager1.addInfo("google", "username", "user3");
+            manager1.addData("google", "username", "user1");
+            manager1.addData("google", "username", "user2");
+            manager1.addData("google", "username", "user3");
             assertEquals("google\n\tusername3: user3\n\tusername2: user2\n\tusername: user1\n",
                     manager1.displayAllInfo());
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException
@@ -98,7 +98,7 @@ public class PasswordManagerTest {
     public void testAddingInfoToEmpty() throws Exception {
         manager1.addUser("Bob", "Joe");
         manager1.checkLogin("Bob", "Joe");
-        manager1.addInfo("google", "username", "user123");
+        manager1.addData("google", "username", "user123");
         assertEquals("google\n", manager1.displaySites());
         assertEquals("username: user123\n", manager1.displayInfo("google"));
     }
@@ -108,11 +108,11 @@ public class PasswordManagerTest {
         manager1.addUser("Bob", "Joe");
         manager1.checkLogin("Bob", "Joe");
         manager1.addSite("google");
-        manager1.addInfo("google", "username", "user123");
+        manager1.addData("google", "username", "user123");
         manager1.removeData("google", "username");
         assertEquals("", manager1.displayInfo("google"));
-        manager1.addInfo("google", "username", "user123");
-        manager1.addInfo("google", "password", "pswd123");
+        manager1.addData("google", "username", "user123");
+        manager1.addData("google", "password", "pswd123");
         manager1.removeData("google", "username");
         assertEquals("password: pswd123\n", manager1.displayInfo("google"));
     }
@@ -122,12 +122,12 @@ public class PasswordManagerTest {
         manager1.addUser("Bob", "Joe");
         manager1.checkLogin("Bob", "Joe");
         manager1.addSite("google");
-        manager1.addInfo("google", "username", "user123");
+        manager1.addData("google", "username", "user123");
         manager1.removeSite("google");
         assertEquals("", manager1.displaySites());
         manager1.addSite("google");
         manager1.addSite("amazon");
-        manager1.addInfo("amazon", "username", "user456");
+        manager1.addData("amazon", "username", "user456");
         manager1.removeSite("google");
         assertEquals("amazon\n", manager1.displaySites());
     }
@@ -137,7 +137,7 @@ public class PasswordManagerTest {
         manager1.addUser("Bob", "Joe");
         manager1.checkLogin("Bob", "Joe");
         manager1.addSite("google");
-        manager1.addInfo("google", "username", "user123");
+        manager1.addData("google", "username", "user123");
         manager1.editData("google", "username", "newUser");
         assertEquals("username: newUser\n", manager1.displayInfo("google"));
     }
@@ -170,7 +170,7 @@ public class PasswordManagerTest {
         try {
             manager1.addUser(username, password);
             manager1.checkLogin(username, password);
-            manager1.addInfo("google", "username", "user23");
+            manager1.addData("google", "username", "user23");
             manager1.userLoggedOut();
             manager1.checkLogin(username, password);
             assertEquals("google\n\tusername: user23\n", manager1.displayAllInfo());

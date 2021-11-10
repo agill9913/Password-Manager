@@ -13,7 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 //Represents a password manager that has multiple accounts that have their own data
-public class PasswordManager implements Writable {
+public class PasswordManager implements Writable, DataOperations {
 
     private ArrayList<UserAccount> accounts;
     private UserAccount currUser;
@@ -45,6 +45,7 @@ public class PasswordManager implements Writable {
     //REQUIRES: user has logged in
     //MODIFIES: this
     //EFFECTS: adds a new site hashmap to the current user's account
+    @Override
     public void addSite(String site) {
         currUser.addSite(site);
     }
@@ -52,13 +53,15 @@ public class PasswordManager implements Writable {
     //REQUIRES: user has logged in
     //MODIFIES: this
     //EFFECTS: adds new info to a site in user account
-    public void addInfo(String site, String key, String info) {
+    @Override
+    public void addData(String site, String key, String info) {
         currUser.addData(site, key, info);
     }
 
     //REQUIRES: user has logged in
     //MODIFIES: this
     //EFFECTS: edits existing site data with newData
+    @Override
     public void editData(String site, String key, String newData) {
         currUser.editData(site, key, newData);
     }
@@ -66,6 +69,7 @@ public class PasswordManager implements Writable {
     //REQUIRES: user has logged in
     //MODIFIES: this
     //EFFECTS: removes data from a site in a user account
+    @Override
     public void removeData(String site, String key) {
         currUser.removeData(site, key);
     }
@@ -73,6 +77,7 @@ public class PasswordManager implements Writable {
     //REQUIRES: user has logged in
     //MODIFIES: this
     //EFFECTS: removes a site, and it's data from a user account
+    @Override
     public void removeSite(String site) {
         currUser.removeSite(site);
     }
