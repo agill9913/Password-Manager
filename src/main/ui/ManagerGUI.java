@@ -21,8 +21,8 @@ import java.security.NoSuchAlgorithmException;
 //Initializes a GUI to use Password Manager with
 public class ManagerGUI extends JFrame {
     private static final String JSON_PATH = "./data/PManager.json";
-    private final JPanel masterPanel;
-    private final CardLayout cardLayout;
+    private JPanel masterPanel;
+    private CardLayout cardLayout;
 
     //login fields
     private PasswordManager manager;
@@ -43,6 +43,9 @@ public class ManagerGUI extends JFrame {
     private JButton remove;
     private JButton edit;
     private JButton save;
+    private JTextField siteSearchField;
+    private JButton search;
+    private JButton logout;
 
     public static void main(String[] args) {
         new ManagerGUI();
@@ -51,20 +54,33 @@ public class ManagerGUI extends JFrame {
     //EFFECTS: Creates a GUI for Password Manager and initialize the panels for GUI
     //MODIFIES: this
     ManagerGUI() {
-        //this.manager = new PasswordManager();
-        cardLayout = new CardLayout();
+        JsonReader readFile = new JsonReader(JSON_PATH);
+        try {
+            this.manager =  readFile.read();
+        } catch (IOException evv) {
+            this.manager = new PasswordManager();
+        } catch (NoSuchAlgorithmException eb) {
+            JOptionPane.showMessageDialog(loginPanel, "An error has occurred, loading default",
+                    "Error", JOptionPane.WARNING_MESSAGE);
+            this.manager = new PasswordManager();
+        }
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLoginPanel();
         setRunningPanel();
-        this.masterPanel = new JPanel(cardLayout);
-        this.masterPanel.add(this.loginPanel, "LOGIN");
-        this.masterPanel.add(this.runningPanel, "RUNNING");
-        add(this.masterPanel, BorderLayout.CENTER);
+        setMasterPanel();
         setTitle("Password Manager Login");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setSize((int)(screenSize.getWidth() / 4.0), (int)(screenSize.getHeight() / 4.0));
         setLocationRelativeTo(null);
         setVisible(true);
+    }
+
+    private void setMasterPanel() {
+        this.cardLayout = new CardLayout();
+        this.masterPanel = new JPanel(cardLayout);
+        this.masterPanel.add(this.loginPanel, "LOGIN");
+        this.masterPanel.add(this.runningPanel, "RUNNING");
+        add(this.masterPanel, BorderLayout.CENTER);
     }
 
     //EFFECTS: Adds components to running toolbar
@@ -74,6 +90,8 @@ public class ManagerGUI extends JFrame {
         toolBar.add(this.edit);
         toolBar.add(this.remove);
         toolBar.add(this.save);
+        toolBar.add(this.search);
+        toolBar.add(this.siteSearchField);
     }
 
     //EFFECTS: Initialize running panel components and add to running panel
@@ -89,6 +107,11 @@ public class ManagerGUI extends JFrame {
         this.remove.addActionListener(new RemoveListener());
         this.add = new JButton("Add");
         this.add.addActionListener(new AddListener());
+        this.search = new JButton("Search");
+        this.search.addActionListener(new SearchListener());
+        this.logout = new JButton("Logout");
+        this.logout.addActionListener(new LogoutListener());
+        this.siteSearchField = new JTextField();
         this.runningPanel = new JPanel();
         this.toolBar = new JToolBar();
         setToolBar();
@@ -128,26 +151,30 @@ public class ManagerGUI extends JFrame {
         return retPanel;
     }
 
+    private void saveData(String destFile) {
+        JsonWriter writer = new JsonWriter(destFile);
+        try {
+            writer.open();
+            writer.write(manager);
+            writer.close();
+            JOptionPane.showMessageDialog(runningPanel, "File written to: " + destFile, "File Saved",
+                    JOptionPane.INFORMATION_MESSAGE);
+        } catch (FileNotFoundException eb) {
+            JOptionPane.showMessageDialog(runningPanel, "Can't write to file", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (NoSuchPaddingException | UnsupportedEncodingException | IllegalBlockSizeException
+                | NoSuchAlgorithmException | BadPaddingException | InvalidKeyException et) {
+            JOptionPane.showMessageDialog(runningPanel, "An error has occurred", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     //Listener for when save button clicked, saves Manager to JSON file
     private class SaveListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             String destFile = "./data/" + JOptionPane.showInputDialog("File name: ") + ".json";
-            JsonWriter writer = new JsonWriter(destFile);
-            try {
-                writer.open();
-                writer.write(manager);
-                writer.close();
-                System.out.println("File saved to: " + destFile);
-            } catch (FileNotFoundException eb) {
-                JOptionPane.showMessageDialog(runningPanel, "Can't write to file",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (NoSuchPaddingException | UnsupportedEncodingException | IllegalBlockSizeException
-                    | NoSuchAlgorithmException | BadPaddingException | InvalidKeyException et) {
-                JOptionPane.showMessageDialog(runningPanel, "An error has occurred",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-
+            saveData(destFile);
         }
     }
 
@@ -246,4 +273,23 @@ public class ManagerGUI extends JFrame {
         }
     }
 
+    private class SearchListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            dataOutput.setText(manager.displayInfo(siteSearchField.getText()));
+        }
+    }
+
+    private class LogoutListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                manager.userLoggedOut();
+                cardLayout.show(masterPanel, "LOGIN");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(loginPanel, "An error has occurred", "Error",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        }
+    }
 }
