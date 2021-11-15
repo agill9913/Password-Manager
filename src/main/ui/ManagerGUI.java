@@ -86,12 +86,15 @@ public class ManagerGUI extends JFrame {
     //EFFECTS: Adds components to running toolbar
     //MODIFIES: this
     private void setToolBar() {
+        toolBar.setRollover(true);
         toolBar.add(this.add);
         toolBar.add(this.edit);
         toolBar.add(this.remove);
         toolBar.add(this.save);
         toolBar.add(this.search);
         toolBar.add(this.siteSearchField);
+        toolBar.add(this.logout);
+        toolBar.addSeparator();
     }
 
     //EFFECTS: Initialize running panel components and add to running panel
@@ -111,12 +114,12 @@ public class ManagerGUI extends JFrame {
         this.search.addActionListener(new SearchListener());
         this.logout = new JButton("Logout");
         this.logout.addActionListener(new LogoutListener());
-        this.siteSearchField = new JTextField();
+        this.siteSearchField = new JTextField(20);
         this.runningPanel = new JPanel();
         this.toolBar = new JToolBar();
         setToolBar();
-        runningPanel.add(this.toolBar);
-        runningPanel.add(this.dataOutput);
+        runningPanel.add(this.toolBar, BorderLayout.NORTH);
+        runningPanel.add(this.dataOutput, BorderLayout.CENTER);
     }
 
     //EFFECTS: Initialize login panel components and add to log in panel
@@ -192,6 +195,7 @@ public class ManagerGUI extends JFrame {
                 String key = JOptionPane.showInputDialog("Data name: ");
                 manager.removeData(site, key);
             }
+            dataOutput.setText(manager.displayAllInfo());
         }
     }
 
@@ -203,6 +207,7 @@ public class ManagerGUI extends JFrame {
             String key = JOptionPane.showInputDialog("Data name: ");
             String newData = JOptionPane.showInputDialog("Enter new value: ");
             manager.editData(site, key, newData);
+            dataOutput.setText(manager.displayAllInfo());
         }
     }
 
@@ -221,6 +226,7 @@ public class ManagerGUI extends JFrame {
                 String data = JOptionPane.showInputDialog("Data Value: ");
                 manager.addData(site, key, data);
             }
+            dataOutput.setText(manager.displayAllInfo());
         }
     }
 
@@ -265,6 +271,7 @@ public class ManagerGUI extends JFrame {
                     JOptionPane.showMessageDialog(loginPanel, "Unable to login user");
                 } else {
                     cardLayout.show(masterPanel, "RUNNING");
+                    dataOutput.setText(manager.displayAllInfo());
                 }
             } catch (InvalidKeyException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException
                     | NoSuchAlgorithmException ex) {
@@ -276,7 +283,17 @@ public class ManagerGUI extends JFrame {
     private class SearchListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            dataOutput.setText(manager.displayInfo(siteSearchField.getText()));
+            JFrame output = new JFrame();
+            JTextField text = new JTextField();
+            text.setText("Whatever");
+            text.setEditable(false);
+            output.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            output.setTitle("Search");
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            output.setSize((int)(screenSize.getWidth() / 4.0), (int)(screenSize.getHeight() / 4.0));
+            output.setLocationRelativeTo(null);
+            output.add(text);
+            output.setVisible(true);
         }
     }
 
