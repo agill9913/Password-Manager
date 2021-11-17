@@ -83,6 +83,17 @@ public class UserData implements Writable, DataOperations {
         return sites;
     }
 
+    public String[] getData(String site) {
+        String[] dataValues = new String[dataMap.get(site).size()];
+        int i = 0;
+        for (String keys: dataMap.get(site).keySet()) {
+            dataValues[i] = keys + ": " + dataMap.get(site).get(keys);
+            i++;
+        }
+        return dataValues;
+    }
+
+
     //MODIFIES: this
     //EFFECTS: adds site to dataMap
     @Override

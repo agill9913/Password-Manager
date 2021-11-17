@@ -43,9 +43,9 @@ public class ManagerGUI extends JFrame {
     private JButton remove;
     private JButton edit;
     private JButton save;
-    private JTextField siteSearchField;
     private JButton search;
     private JButton logout;
+    private JButton userInfo;
 
     public static void main(String[] args) {
         new ManagerGUI();
@@ -72,6 +72,7 @@ public class ManagerGUI extends JFrame {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setSize((int)(screenSize.getWidth() / 4.0), (int)(screenSize.getHeight() / 4.0));
         setLocationRelativeTo(null);
+        setIconImage(new ImageIcon("./data/tobs.jpg").getImage());
         setVisible(true);
     }
 
@@ -92,8 +93,8 @@ public class ManagerGUI extends JFrame {
         toolBar.add(this.remove);
         toolBar.add(this.save);
         toolBar.add(this.search);
-        toolBar.add(this.siteSearchField);
         toolBar.add(this.logout);
+        toolBar.add(this.userInfo);
         toolBar.addSeparator();
     }
 
@@ -114,8 +115,9 @@ public class ManagerGUI extends JFrame {
         this.search.addActionListener(new SearchListener());
         this.logout = new JButton("Logout");
         this.logout.addActionListener(new LogoutListener());
-        this.siteSearchField = new JTextField(20);
         this.runningPanel = new JPanel();
+        this.userInfo = new JButton("User List");
+        this.userInfo.addActionListener(new UserListListener());
         this.toolBar = new JToolBar();
         setToolBar();
         runningPanel.add(this.toolBar, BorderLayout.NORTH);
@@ -176,8 +178,10 @@ public class ManagerGUI extends JFrame {
     private class SaveListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            String destFile = "./data/" + JOptionPane.showInputDialog("File name: ") + ".json";
-            saveData(destFile);
+            JFileChooser fileChooser = new JFileChooser("./data");
+            if (fileChooser.showSaveDialog(masterPanel) == JFileChooser.APPROVE_OPTION) {
+                saveData(fileChooser.getSelectedFile() + ".json");
+            }
         }
     }
 
@@ -188,12 +192,15 @@ public class ManagerGUI extends JFrame {
             String[] choices = {"Site", "Data"};
             int option = JOptionPane.showOptionDialog(runningPanel, "Remove site or data?", "Remove",
                     JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
-            String site = JOptionPane.showInputDialog("Site: ");
+            JComboBox sites = new JComboBox(manager.getSites());
+            JOptionPane.showMessageDialog(runningPanel, sites, "Sites", JOptionPane.QUESTION_MESSAGE);
+            String userSite = sites.getSelectedItem().toString();
             if (option == 0) {
-                manager.removeSite(site);
+                manager.removeSite(userSite);
             } else if (option == 1) {
-                String key = JOptionPane.showInputDialog("Data name: ");
-                manager.removeData(site, key);
+                JComboBox keys = new JComboBox(manager.getData(userSite));
+                JOptionPane.showMessageDialog(runningPanel, keys, "Saved values", JOptionPane.QUESTION_MESSAGE);
+                manager.removeData(userSite, keys.getSelectedItem().toString());
             }
             dataOutput.setText(manager.displayAllInfo());
         }
@@ -201,32 +208,81 @@ public class ManagerGUI extends JFrame {
 
     //Listener for when edit is clicked, edits existing data in manager with new data
     private class EditListener implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent e) {
-            String site = JOptionPane.showInputDialog("Site: ");
-            String key = JOptionPane.showInputDialog("Data name: ");
-            String newData = JOptionPane.showInputDialog("Enter new value: ");
-            manager.editData(site, key, newData);
-            dataOutput.setText(manager.displayAllInfo());
+            final JComboBox sites = new JComboBox(manager.getSites());
+            sites.setSelectedIndex(0);
+            JOptionPane.showMessageDialog(runningPanel, sites, "Sites", JOptionPane.QUESTION_MESSAGE);
+            String siteChoice = sites.getSelectedItem().toString();
+            final JComboBox data = new JComboBox(manager.getData(siteChoice));
+            data.setSelectedIndex(0);
+            JOptionPane.showMessageDialog(runningPanel, data, "Data", JOptionPane.QUESTION_MESSAGE);
+            String dataChoice = data.getSelectedItem().toString();
+            String newData = JOptionPane.showInputDialog(runningPanel, "Input new data value: ",
+                    "Input Data", JOptionPane.QUESTION_MESSAGE);
+            data.addItem(newData);
         }
     }
 
     //Listener for when add is clicked, adds either a site or data to an existing site
     private class AddListener implements ActionListener {
+
+        private int chooseAdd() {
+            String[] choices = {"Site", "Data"};
+            return JOptionPane.showOptionDialog(runningPanel, "Add site or data?", "Add",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+        }
+
+        private void setPopup(int choice, JTextField siteField, JDialog addPopup, JTextField dataKeyField,
+                              JTextField dataField, JButton addButton) {
+            addPopup.setLayout(new FlowLayout());
+            addPopup.add(new JLabel("Site"));
+            addPopup.add(siteField);
+            if (choice == 1) {
+                addPopup.add(new JLabel("Data Name"));
+                addPopup.add(dataKeyField);
+                addPopup.add(new JLabel("Data value"));
+                addPopup.add(dataField);
+            }
+            chooseOption(choice, addPopup, dataKeyField, dataField, siteField, addButton);
+            addPopup.add(addButton);
+            addPopup.setSize(300, 300);
+            addPopup.setVisible(true);
+        }
+
+        private void chooseOption(int option, JDialog addPopup, JTextField dataKeyField, JTextField dataField,
+                                  JTextField siteField, JButton addData) {
+            if (option == 0) {
+                addData.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        manager.addSite(siteField.getText());
+                        addPopup.setVisible(false);
+                        dataOutput.setText(manager.displayAllInfo());
+                    }
+                });
+            } else if (option == 1) {
+                addData.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        manager.addData(siteField.getText(), dataKeyField.getText(), dataField.getText());
+                        addPopup.setVisible(false);
+                        dataOutput.setText(manager.displayAllInfo());
+                    }
+                });
+            }
+        }
+
         @Override
         public void actionPerformed(ActionEvent e) {
-            String[] choices = {"Site", "Data"};
-            int option = JOptionPane.showOptionDialog(runningPanel, "Add site or data?", "Add",
-                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
-            String site = JOptionPane.showInputDialog("Site: ");
-            if (option == 0) {
-                manager.addSite(site);
-            } else if (option == 1) {
-                String key = JOptionPane.showInputDialog("Data name: ");
-                String data = JOptionPane.showInputDialog("Data Value: ");
-                manager.addData(site, key, data);
-            }
-            dataOutput.setText(manager.displayAllInfo());
+            JDialog addPopup = new JDialog(ManagerGUI.this, "AddPopup", true);
+            JTextField siteField = new JTextField(25);
+            JTextField dataKeyField = new JTextField(25);
+            JTextField dataField = new JTextField(25);
+            JButton addData = new JButton("Add");
+            int option = chooseAdd();
+            setPopup(option, siteField, addPopup, dataKeyField, dataField, addData);
         }
     }
 
@@ -234,16 +290,18 @@ public class ManagerGUI extends JFrame {
     private class LoadListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            String srcFile = "./data/" + JOptionPane.showInputDialog("File name with no extension: ") + ".json";
-            JsonReader readFile = new JsonReader(srcFile);
-            try {
-                manager = readFile.read();
-            } catch (IOException evv) {
-                JOptionPane.showMessageDialog(loginPanel, "Unable to read file",
-                        "File Error", JOptionPane.WARNING_MESSAGE);
-            } catch (NoSuchAlgorithmException eb) {
-                JOptionPane.showMessageDialog(loginPanel, "An error has occurred",
-                        "Error", JOptionPane.WARNING_MESSAGE);
+            JFileChooser fileChooser = new JFileChooser("./data");
+            if (fileChooser.showOpenDialog(masterPanel) == JFileChooser.APPROVE_OPTION) {
+                JsonReader readFile = new JsonReader(fileChooser.getSelectedFile().getPath());
+                try {
+                    manager = readFile.read();
+                } catch (IOException evv) {
+                    JOptionPane.showMessageDialog(loginPanel, "Unable to read file",
+                            "File Error", JOptionPane.WARNING_MESSAGE);
+                } catch (NoSuchAlgorithmException eb) {
+                    JOptionPane.showMessageDialog(loginPanel, "An error has occurred",
+                            "Error", JOptionPane.WARNING_MESSAGE);
+                }
             }
         }
     }
@@ -283,9 +341,13 @@ public class ManagerGUI extends JFrame {
     private class SearchListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            final JComboBox sites = new JComboBox(manager.getSites());
+            sites.setSelectedIndex(0);
+            JOptionPane.showMessageDialog(runningPanel, sites, "Sites", JOptionPane.QUESTION_MESSAGE);
+            String siteChoice = sites.getSelectedItem().toString();
             JFrame output = new JFrame();
             JTextField text = new JTextField();
-            text.setText("Whatever");
+            text.setText(manager.displayInfo(siteChoice));
             text.setEditable(false);
             output.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             output.setTitle("Search");
@@ -307,6 +369,19 @@ public class ManagerGUI extends JFrame {
                 JOptionPane.showMessageDialog(loginPanel, "An error has occurred", "Error",
                         JOptionPane.WARNING_MESSAGE);
             }
+        }
+    }
+
+    private class UserListListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JFrame userFrame = new JFrame();
+            JTextField users = new JTextField();
+            users.setText(manager.userStringList());
+            users.setEditable(false);
+            userFrame.add(users);
+            userFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            userFrame.setTitle("User List");
         }
     }
 }

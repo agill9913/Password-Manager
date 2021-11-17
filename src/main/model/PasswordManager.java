@@ -96,6 +96,22 @@ public class PasswordManager implements Writable, DataOperations {
         return false;
     }
 
+    public String[] getSites() {
+        return currUser.getSites();
+    }
+
+    public String[] getData(String site) {
+        return currUser.getData(site);
+    }
+
+    public String userStringList() {
+        StringBuilder retVal = new StringBuilder();
+        for (UserAccount acc: accounts) {
+            retVal.append(acc.getCredsString()).append('\n');
+        }
+        return retVal.toString();
+    }
+
     //REQUIRES: user has logged in
     //MODIFIES: this
     //EFFECTS: sets current user to null when they log out

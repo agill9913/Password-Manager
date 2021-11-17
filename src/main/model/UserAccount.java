@@ -31,6 +31,18 @@ public class UserAccount implements Writable, DataOperations {
         dataMap = new UserData(data, info.getHash());
     }
 
+    public String getCredsString() {
+        return userCred.toString();
+    }
+
+    public String[] getSites() {
+        return dataMap.getAllSites();
+    }
+
+    public String[] getData(String site) {
+        return dataMap.getData(site);
+    }
+
     //EFFECTS: Updates the AES key and decrypts the data with said key
     //MODIFIES: this
     public void updateData(String hash) throws NoSuchAlgorithmException, NoSuchPaddingException,
