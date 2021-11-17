@@ -11,6 +11,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -73,6 +75,7 @@ public class ManagerGUI extends JFrame {
         setSize((int)(screenSize.getWidth() / 4.0), (int)(screenSize.getHeight() / 4.0));
         setLocationRelativeTo(null);
         setIconImage(new ImageIcon("./data/tobs.jpg").getImage());
+        addWindowListener(new CloseListener());
         setVisible(true);
     }
 
@@ -156,6 +159,7 @@ public class ManagerGUI extends JFrame {
         return retPanel;
     }
 
+    //EFFECTS: Saves manager to file destination
     private void saveData(String destFile) {
         JsonWriter writer = new JsonWriter(destFile);
         try {
@@ -177,6 +181,7 @@ public class ManagerGUI extends JFrame {
     //Listener for when save button clicked, saves Manager to JSON file
     private class SaveListener implements ActionListener {
         @Override
+        //EFFECTS: Display a file chooser for user to input file to save manager to and save it to said file
         public void actionPerformed(ActionEvent e) {
             JFileChooser fileChooser = new JFileChooser("./data");
             if (fileChooser.showSaveDialog(masterPanel) == JFileChooser.APPROVE_OPTION) {
@@ -187,6 +192,9 @@ public class ManagerGUI extends JFrame {
 
     //Listener for when remove is clicked, removes entire site or specific data from site
     private class RemoveListener implements ActionListener {
+
+        //EFFECTS: Displays popup about which data to delete and removes it from manager
+        //MODIFIES: manager
         @Override
         public void actionPerformed(ActionEvent e) {
             String[] choices = {"Site", "Data"};
@@ -209,6 +217,8 @@ public class ManagerGUI extends JFrame {
     //Listener for when edit is clicked, edits existing data in manager with new data
     private class EditListener implements ActionListener {
 
+        //EFFECTS: creates a popup to get info and which data to edit and edit manager accordingly
+        //MODIFIES: manager
         @Override
         public void actionPerformed(ActionEvent e) {
             final JComboBox sites = new JComboBox(manager.getSites());
@@ -228,12 +238,15 @@ public class ManagerGUI extends JFrame {
     //Listener for when add is clicked, adds either a site or data to an existing site
     private class AddListener implements ActionListener {
 
+        //EFFECTS: Get choice if data or site choosen and return it
         private int chooseAdd() {
             String[] choices = {"Site", "Data"};
             return JOptionPane.showOptionDialog(runningPanel, "Add site or data?", "Add",
                     JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
         }
 
+        //EFFECTS: add components to dialog popup depending on choice
+        //modifies: this
         private void setPopup(int choice, JTextField siteField, JDialog addPopup, JTextField dataKeyField,
                               JTextField dataField, JButton addButton) {
             addPopup.setLayout(new FlowLayout());
@@ -251,10 +264,15 @@ public class ManagerGUI extends JFrame {
             addPopup.setVisible(true);
         }
 
+        //EFFECTS:checks if site or data choosen and data fields to panel and add data to manager
+        //MODIFIES: this, manager
         private void chooseOption(int option, JDialog addPopup, JTextField dataKeyField, JTextField dataField,
                                   JTextField siteField, JButton addData) {
             if (option == 0) {
                 addData.addActionListener(new ActionListener() {
+
+                    //EFFECTS: add site to manager
+                    //MODIFIES: manager
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         manager.addSite(siteField.getText());
@@ -264,6 +282,9 @@ public class ManagerGUI extends JFrame {
                 });
             } else if (option == 1) {
                 addData.addActionListener(new ActionListener() {
+
+                    //EFFECTS: add site and data to manager
+                    //MODIFIES: manager
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         manager.addData(siteField.getText(), dataKeyField.getText(), dataField.getText());
@@ -274,6 +295,8 @@ public class ManagerGUI extends JFrame {
             }
         }
 
+        //EFFECTS: creates popup to ask for data to add
+        //MODIFIES: this
         @Override
         public void actionPerformed(ActionEvent e) {
             JDialog addPopup = new JDialog(ManagerGUI.this, "AddPopup", true);
@@ -288,6 +311,9 @@ public class ManagerGUI extends JFrame {
 
     //Listener for when load is clicked, loads data to manager from a file user inputs
     private class LoadListener implements ActionListener {
+
+        //EFFECTS: gets file to load and load from said file to manager
+        //MODIFIES: manager
         @Override
         public void actionPerformed(ActionEvent e) {
             JFileChooser fileChooser = new JFileChooser("./data");
@@ -308,6 +334,9 @@ public class ManagerGUI extends JFrame {
 
     //Listener for when register is clicked, create and add a new user to manager
     private class RegisterListener implements ActionListener {
+
+        //EFFECTS: adds user to manager
+        //MODIFIES: manager
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
@@ -321,6 +350,8 @@ public class ManagerGUI extends JFrame {
     //Listener for when login is clicked, checks given username and password against existing credentials and change
     //panel if correct
     private class LoginListener implements ActionListener {
+
+        //EFFECTS: logs user in by checking login credentials and change frame
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
@@ -338,7 +369,10 @@ public class ManagerGUI extends JFrame {
         }
     }
 
+    //Listener for when search is pushed
     private class SearchListener implements ActionListener {
+
+        //EFFECTS: Creates a new frame with the data from a site
         @Override
         public void actionPerformed(ActionEvent e) {
             final JComboBox sites = new JComboBox(manager.getSites());
@@ -359,7 +393,11 @@ public class ManagerGUI extends JFrame {
         }
     }
 
+    //listener for when logout is pushed
     private class LogoutListener implements ActionListener {
+
+        //EFFECTS: logs user out and change panel to login
+        //MODIFIES: manager
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
@@ -372,7 +410,10 @@ public class ManagerGUI extends JFrame {
         }
     }
 
+    //Listener for when userlist button pushed
     private class UserListListener implements ActionListener {
+
+        //EFFECTS: Display popup of list of hashed user credentials
         @Override
         public void actionPerformed(ActionEvent e) {
             JFrame userFrame = new JFrame();
@@ -382,6 +423,60 @@ public class ManagerGUI extends JFrame {
             userFrame.add(users);
             userFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             userFrame.setTitle("User List");
+        }
+    }
+
+    //Listener for windows events
+    private class CloseListener implements WindowListener {
+
+        //EEFECTS: does something when window is opened
+        @Override
+        public void windowOpened(WindowEvent e) {
+            //not used but required to be implemented for WindowListener
+        }
+
+        //EFFECTS: When window is closing, log user out and autosaves password manager
+        //MODIFIES: manager
+        @Override
+        public void windowClosing(WindowEvent e) {
+            try {
+                manager.userLoggedOut();
+                cardLayout.show(masterPanel, "LOGIN");
+                saveData(JSON_PATH);
+            } catch (Exception er) {
+                JOptionPane.showMessageDialog(ManagerGUI.this, "An error occured", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        //EFFECTS: does something when window is closed
+        @Override
+        public void windowClosed(WindowEvent e) {
+            //not used but required to be implemented for WindowListener
+        }
+
+        //EFFECTS: does something when window is iconified
+        @Override
+        public void windowIconified(WindowEvent e) {
+            //not used but required to be implemented for WindowListener
+        }
+
+        //EFFECTS: does something when window is deiconified
+        @Override
+        public void windowDeiconified(WindowEvent e) {
+            //not used but required to be implemented for WindowListener
+        }
+
+        //EFFECTS: does something when window is activated
+        @Override
+        public void windowActivated(WindowEvent e) {
+            //not used but required to be implemented for WindowListener
+        }
+
+        //EFFECTS: does something when window is deactivated
+        @Override
+        public void windowDeactivated(WindowEvent e) {
+            //not used but required to be implemented for WindowListener
         }
     }
 }
