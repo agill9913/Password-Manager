@@ -180,4 +180,47 @@ public class PasswordManagerTest {
             fail("Something went wrong in AES or Hashing");
         }
     }
+
+    @Test
+    public void testGetUsers() {
+        String username1 = "Bob";
+        String password1 = "Joe";
+        String username2 = "Jane";
+        String password2 = "Smith";
+        try {
+            manager1.addUser(username1, password1);
+            manager1.addUser(username2, password2);
+            assertEquals(manager1.userStringList(),
+                    "Username Hash = da6645f6e22bf5f75974dc7eed5fcd6160d6b51e, " +
+                            "Password Hash =89661149f1b62ff47dd5a6fe4f979c9f53f619b6" + '\n' +
+                            "Username Hash = 1b78097fcf82ab0445ae892d380c29ccb5405620, " +
+                            "Password Hash =96bcf8c98f94b6ace4a4b716cf0e3b32743a08b1" + '\n');
+        } catch (NoSuchAlgorithmException e) {
+            fail("Couldn't find a algorithm exception");
+        }
+    }
+
+    @Test
+    public void testSearchSites() {
+        String username = "Bob";
+        String password = "Joe";
+        String[] sites = {"Google", "Amazon"};
+        String[] data = {"blame me", "567"};
+        String[] key = {"Uname", "cvc"};
+        try {
+            manager1.addUser(username, password);
+            manager1.checkLogin(username, password);
+            manager1.addData(sites[0], key[0], data[0]);
+            manager1.addData(sites[0], key[1], data[1]);
+            manager1.addData(sites[1], "phone number", "577656757657");
+            assertEquals(manager1.getSites()[0], sites[0]);
+            assertEquals(manager1.getSites()[1], sites[1]);
+            assertEquals(manager1.getData(sites[0])[0], key[0] + ": " + data[0]);
+            assertEquals(manager1.getData(sites[0])[0], key[0] + ": " + data[0]);
+        } catch (NoSuchAlgorithmException e) {
+            fail("Couldn't find a algorithm exception");
+        } catch (NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
+            fail("The end is here - we've reached some sort of exception");
+        }
+    }
 }
