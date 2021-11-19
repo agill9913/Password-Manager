@@ -118,7 +118,7 @@ public class ManagerGUI extends JFrame {
         this.search.addActionListener(new SearchListener());
         this.logout = new JButton("Logout");
         this.logout.addActionListener(new LogoutListener());
-        this.runningPanel = new JPanel();
+        this.runningPanel = new JPanel(new BorderLayout());
         this.userInfo = new JButton("User List");
         this.userInfo.addActionListener(new UserListListener());
         this.toolBar = new JToolBar();
