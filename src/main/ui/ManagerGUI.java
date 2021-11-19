@@ -48,6 +48,7 @@ public class ManagerGUI extends JFrame {
     private JButton search;
     private JButton logout;
     private JButton userInfo;
+    private JButton removeUser;
 
     public static void main(String[] args) {
         new ManagerGUI();
@@ -98,6 +99,7 @@ public class ManagerGUI extends JFrame {
         toolBar.add(this.search);
         toolBar.add(this.logout);
         toolBar.add(this.userInfo);
+        toolBar.add(this.removeUser);
         toolBar.addSeparator();
     }
 
@@ -121,6 +123,8 @@ public class ManagerGUI extends JFrame {
         this.runningPanel = new JPanel(new BorderLayout());
         this.userInfo = new JButton("User List");
         this.userInfo.addActionListener(new UserListListener());
+        this.removeUser = new JButton("Wipe Data");
+        this.removeUser.addActionListener(new WipeListener());
         this.toolBar = new JToolBar();
         setToolBar();
         runningPanel.add(this.toolBar, BorderLayout.NORTH);
@@ -175,6 +179,29 @@ public class ManagerGUI extends JFrame {
                 | NoSuchAlgorithmException | BadPaddingException | InvalidKeyException et) {
             JOptionPane.showMessageDialog(runningPanel, "An error has occurred", "Error",
                     JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private class WipeListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int choice = JOptionPane.showConfirmDialog(runningPanel,
+                    "Are you sure you want to delete your account?",
+                    "Remove account", JOptionPane.YES_NO_OPTION);
+            if (choice == 0) {
+                String username = JOptionPane.showInputDialog(runningPanel,
+                        "Enter Username for confirmation: ");
+                String password = JOptionPane.showInputDialog(runningPanel,
+                        "Enter Password for confirmation: ");
+                if (manager.removeUser(username, password)) {
+                    cardLayout.show(masterPanel, "LOGIN");
+                    JOptionPane.showMessageDialog(loginPanel, "User removed successfully",
+                            "Removed user", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(loginPanel, "Unable to remove user, try again later",
+                            "Can't remove user", JOptionPane.WARNING_MESSAGE);
+                }
+            }
         }
     }
 
@@ -440,8 +467,10 @@ public class ManagerGUI extends JFrame {
         @Override
         public void windowClosing(WindowEvent e) {
             try {
-                manager.userLoggedOut();
-                cardLayout.show(masterPanel, "LOGIN");
+                if (manager.isLoggedIn() == true) {
+                    manager.userLoggedOut();
+                    cardLayout.show(masterPanel, "LOGIN");
+                }
                 saveData(JSON_PATH);
             } catch (Exception er) {
                 JOptionPane.showMessageDialog(ManagerGUI.this, "An error occured", "Error",

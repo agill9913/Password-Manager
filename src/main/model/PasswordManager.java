@@ -37,6 +37,17 @@ public class PasswordManager implements Writable, DataOperations {
         accounts.add(new UserAccount(username, password, true));
     }
 
+    //MODIFIES: this
+    //EFFECTS: removes a user from the user accounts arraylist
+    public boolean removeUser(String username, String password) {
+        if (currUser.checkLoginCreds(username, password)) {
+            boolean result = accounts.remove(currUser);
+            currUser = null;
+            return result;
+        }
+        return false;
+    }
+
     //EFFECTS: returns false if there's no user being served, true if a user is logged in
     public boolean isLoggedIn() {
         return currUser != null;

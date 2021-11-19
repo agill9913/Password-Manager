@@ -223,4 +223,24 @@ public class PasswordManagerTest {
             fail("The end is here - we've reached some sort of exception");
         }
     }
+
+    @Test
+    public void testRemoveUser() {
+        String[] username = {"Bob", "Jane"};
+        String[] password = {"Joe", "Doe"};
+        try {
+            manager1.addUser(username[0], password[0]);
+            manager1.addUser(username[1], password[1]);
+            manager1.checkLogin(username[0], password[0]);
+            assertTrue(manager1.removeUser(username[0], password[0]));
+            assertEquals(manager1.userStringList(),
+                    "Username Hash = 1b78097fcf82ab0445ae892d380c29ccb5405620, " +
+                            "Password Hash =c947ad320e66fc64998e86a55c0da210c8c1d81a" + '\n');
+            manager1.checkLogin(username[1], password[1]);
+            assertFalse(manager1.removeUser(username[0], password[0]));
+        } catch (NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException |
+                NoSuchAlgorithmException e) {
+            fail("There appears to be signs of ... an exception that occurred");
+        }
+    }
 }
