@@ -21,6 +21,9 @@ import java.security.NoSuchAlgorithmException;
 
 
 //Initializes a GUI to use Password Manager with
+//Referenced for instances of JDialog: https://www.javatpoint.com/java-jdialog
+//Referenced for login code: https://www.onlinetutorialspoint.com/java/java-swing-login-example.html
+//Referenced for action listeners: http://www.java2s.com/example/java/swing/implement-actionlistener-as-an-inner-class.html
 public class ManagerGUI extends JFrame {
     private static final String JSON_PATH = "./data/PManager.json";
     private JPanel masterPanel;
@@ -396,6 +399,7 @@ public class ManagerGUI extends JFrame {
     private class LoginListener implements ActionListener {
 
         //EFFECTS: logs user in by checking login credentials and change frame
+        //Referenced in method: https://hajsoftutorial.com/showmessagedialog-with-icon/
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
