@@ -467,8 +467,10 @@ public class ManagerGUI extends JFrame {
         @Override
         public void windowClosing(WindowEvent e) {
             try {
-                manager.userLoggedOut();
-                cardLayout.show(masterPanel, "LOGIN");
+                if (manager.isLoggedIn() == true) {
+                    manager.userLoggedOut();
+                    cardLayout.show(masterPanel, "LOGIN");
+                }
                 saveData(JSON_PATH);
             } catch (Exception er) {
                 JOptionPane.showMessageDialog(ManagerGUI.this, "An error occured", "Error",
