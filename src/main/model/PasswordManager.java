@@ -42,9 +42,7 @@ public class PasswordManager implements Writable, DataOperations {
     public boolean removeUser(String username, String password) {
         if (currUser.checkLoginCreds(username, password)) {
             boolean result = accounts.remove(currUser);
-            if (result == true) { //if user successfully deleted change current user to nothing
-                currUser = null;
-            }
+            currUser = null;
             return result;
         }
         return false;
