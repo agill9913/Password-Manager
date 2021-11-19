@@ -83,6 +83,7 @@ public class UserData implements Writable, DataOperations {
         return sites;
     }
 
+    //EFFECTS: Returns an array that contains data for a site
     public String[] getData(String site) {
         String[] dataValues = new String[dataMap.get(site).size()];
         int i = 0;

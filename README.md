@@ -28,4 +28,8 @@ Langara previously so wanted to do something that could incorporate what I learn
 - As a user, I want to have my data save and encrypt when I log out
 - As a user, I want to have my data load automatically and decrypt when I log in
 - As a user, I want to be able to save my data to another file whenever
-- As a user, I want to be able load a different password manager file
+- As a user, I want to be able to load a different password manager file
+
+*Phase 3*
+- As a user, I want to be able to remove my account
+- As a user, I want to see how many users are saved and the hashes

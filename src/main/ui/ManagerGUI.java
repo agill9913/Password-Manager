@@ -25,6 +25,7 @@ public class ManagerGUI extends JFrame {
     private static final String JSON_PATH = "./data/PManager.json";
     private JPanel masterPanel;
     private CardLayout cardLayout;
+    private final ImageIcon icon;
 
     //login fields
     private PasswordManager manager;
@@ -58,6 +59,7 @@ public class ManagerGUI extends JFrame {
     //MODIFIES: this
     ManagerGUI() {
         JsonReader readFile = new JsonReader(JSON_PATH);
+        icon = new ImageIcon("./data/tobs.jpg");
         try {
             this.manager =  readFile.read();
         } catch (IOException evv) {
@@ -71,15 +73,17 @@ public class ManagerGUI extends JFrame {
         setLoginPanel();
         setRunningPanel();
         setMasterPanel();
-        setTitle("Password Manager Login");
+        setTitle("Password Manager");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setSize((int)(screenSize.getWidth() / 4.0), (int)(screenSize.getHeight() / 4.0));
         setLocationRelativeTo(null);
-        setIconImage(new ImageIcon("./data/tobs.jpg").getImage());
+        setIconImage(icon.getImage());
         addWindowListener(new CloseListener());
         setVisible(true);
     }
 
+    //EFFECTS: Initialize master panel and add login and running panel to it
+    //MODIFIES: this
     private void setMasterPanel() {
         this.cardLayout = new CardLayout();
         this.masterPanel = new JPanel(cardLayout);
@@ -103,28 +107,35 @@ public class ManagerGUI extends JFrame {
         toolBar.addSeparator();
     }
 
+    //EFFECTS: adds action listeners to buttons
+    //MODIFIES: this
+    private void setListeners() {
+        this.save.addActionListener(new SaveListener());
+        this.edit.addActionListener(new EditListener());
+        this.remove.addActionListener(new RemoveListener());
+        this.add.addActionListener(new AddListener());
+        this.search.addActionListener(new SearchListener());
+        this.userInfo.addActionListener(new UserListListener());
+        this.removeUser.addActionListener(new WipeListener());
+    }
+
     //EFFECTS: Initialize running panel components and add to running panel
     //MODIFIES: this
     private void setRunningPanel() {
         this.dataOutput = new JTextPane();
         this.dataOutput.setText("Hello world");
+        this.dataOutput.setEditable(false);
         this.save = new JButton("Save");
-        this.save.addActionListener(new SaveListener());
         this.edit = new JButton("Edit");
-        this.edit.addActionListener(new EditListener());
         this.remove = new JButton("Remove");
-        this.remove.addActionListener(new RemoveListener());
         this.add = new JButton("Add");
-        this.add.addActionListener(new AddListener());
         this.search = new JButton("Search");
-        this.search.addActionListener(new SearchListener());
         this.logout = new JButton("Logout");
         this.logout.addActionListener(new LogoutListener());
         this.runningPanel = new JPanel(new BorderLayout());
         this.userInfo = new JButton("User List");
-        this.userInfo.addActionListener(new UserListListener());
         this.removeUser = new JButton("Wipe Data");
-        this.removeUser.addActionListener(new WipeListener());
+        setListeners();
         this.toolBar = new JToolBar();
         setToolBar();
         runningPanel.add(this.toolBar, BorderLayout.NORTH);
@@ -182,7 +193,11 @@ public class ManagerGUI extends JFrame {
         }
     }
 
+    //Removes a user from the manager
     private class WipeListener implements ActionListener {
+
+        //EFFECTS: Removes a user account from manager
+        //MODIFIES: manager
         @Override
         public void actionPerformed(ActionEvent e) {
             int choice = JOptionPane.showConfirmDialog(runningPanel,
@@ -259,6 +274,7 @@ public class ManagerGUI extends JFrame {
             String newData = JOptionPane.showInputDialog(runningPanel, "Input new data value: ",
                     "Input Data", JOptionPane.QUESTION_MESSAGE);
             data.addItem(newData);
+            dataOutput.setText(manager.displayAllInfo());
         }
     }
 
@@ -368,6 +384,7 @@ public class ManagerGUI extends JFrame {
         public void actionPerformed(ActionEvent e) {
             try {
                 manager.addUser(username.getText(), new String(password.getPassword()));
+                JOptionPane.showMessageDialog(loginPanel, "user " + username.getText() + " added");
             } catch (NoSuchAlgorithmException ex) {
                 JOptionPane.showMessageDialog(loginPanel, "Error has occurred");
             }
@@ -386,6 +403,10 @@ public class ManagerGUI extends JFrame {
                     password.setText("");
                     JOptionPane.showMessageDialog(loginPanel, "Unable to login user");
                 } else {
+                    JOptionPane.showMessageDialog(loginPanel, "Welcome " + username.getText(), "Welcome",
+                            JOptionPane.PLAIN_MESSAGE, icon);
+                    username.setText("");
+                    password.setText("");
                     cardLayout.show(masterPanel, "RUNNING");
                     dataOutput.setText(manager.displayAllInfo());
                 }
@@ -443,20 +464,23 @@ public class ManagerGUI extends JFrame {
         //EFFECTS: Display popup of list of hashed user credentials
         @Override
         public void actionPerformed(ActionEvent e) {
-            JFrame userFrame = new JFrame();
-            JTextField users = new JTextField();
-            users.setText(manager.userStringList());
-            users.setEditable(false);
-            userFrame.add(users);
-            userFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            userFrame.setTitle("User List");
+            JDialog users = new JDialog(ManagerGUI.this, "User List", true);
+            users.setLayout(new BorderLayout());
+            JTextPane usersList = new JTextPane();
+            usersList.setText(manager.userStringList());
+            usersList.setEditable(false);
+            users.add(usersList);
+            users.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            users.setSize((int)(screenSize.getWidth() / 8.0), (int)(screenSize.getHeight() / 8.0));
+            users.setVisible(true);
         }
     }
 
     //Listener for windows events
     private class CloseListener implements WindowListener {
 
-        //EEFECTS: does something when window is opened
+        //EFFECTS: does something when window is opened
         @Override
         public void windowOpened(WindowEvent e) {
             //not used but required to be implemented for WindowListener
@@ -467,7 +491,7 @@ public class ManagerGUI extends JFrame {
         @Override
         public void windowClosing(WindowEvent e) {
             try {
-                if (manager.isLoggedIn() == true) {
+                if (manager.isLoggedIn()) {
                     manager.userLoggedOut();
                     cardLayout.show(masterPanel, "LOGIN");
                 }

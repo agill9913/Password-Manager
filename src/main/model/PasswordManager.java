@@ -107,18 +107,21 @@ public class PasswordManager implements Writable, DataOperations {
         return false;
     }
 
+    //EFFECTS: Returns all the sites saved
     public String[] getSites() {
         return currUser.getSites();
     }
 
+    //EFFECTS: Returns all the data for a certain site
     public String[] getData(String site) {
         return currUser.getData(site);
     }
 
+    //EFFECTS: returns a string of all usernames and password hashes
     public String userStringList() {
         StringBuilder retVal = new StringBuilder();
         for (UserAccount acc: accounts) {
-            retVal.append(acc.getCredsString()).append('\n');
+            retVal.append(acc.getCredsString());
         }
         return retVal.toString();
     }

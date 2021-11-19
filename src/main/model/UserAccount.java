@@ -31,14 +31,17 @@ public class UserAccount implements Writable, DataOperations {
         dataMap = new UserData(data, info.getHash());
     }
 
+    //EFFECTS: Returns a string representation of user credentials
     public String getCredsString() {
         return userCred.toString();
     }
 
+    //EFFECTS: Returns all the sites saved
     public String[] getSites() {
         return dataMap.getAllSites();
     }
 
+    //EFFECTS: Returns all data associated with a site
     public String[] getData(String site) {
         return dataMap.getData(site);
     }

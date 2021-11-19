@@ -38,9 +38,10 @@ public class LoginInformation implements Writable {
         return hashGenerator.getHash(usernameHash + passwordHash);
     }
 
+    //EFFECTS: Returns a string representation of username and password hash
     @Override
     public String toString() {
-        return "Username Hash = " + usernameHash + ", Password Hash =" + passwordHash;
+        return "Username Hash = " + usernameHash + ", Password Hash = " + passwordHash + '\n';
     }
 
     //EFFECTS: returns a json representation of username and password of this
