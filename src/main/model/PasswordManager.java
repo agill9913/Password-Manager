@@ -29,6 +29,7 @@ public class PasswordManager implements Writable, DataOperations {
     //EFFECTS: adds a new user to the accounts
     public void addUser(UserAccount user) {
         accounts.add(user);
+        EventLog.getInstance().logEvent(new Event("User added"));
     }
 
     //MODIFIES: this
@@ -43,6 +44,7 @@ public class PasswordManager implements Writable, DataOperations {
         if (currUser.checkLoginCreds(username, password)) {
             boolean result = accounts.remove(currUser);
             currUser = null;
+            EventLog.getInstance().logEvent(new Event("User removed"));
             return result;
         }
         return false;
@@ -101,6 +103,7 @@ public class PasswordManager implements Writable, DataOperations {
             if (user.checkLoginCreds(username, password)) {
                 currUser = user;
                 currUser.updateData(username + password);
+                EventLog.getInstance().logEvent(new Event("User logged in"));
                 return true;
             }
         }
@@ -132,6 +135,7 @@ public class PasswordManager implements Writable, DataOperations {
     public void userLoggedOut() throws Exception {
         currUser.closeData();
         currUser = null;
+        EventLog.getInstance().logEvent(new Event("User logged out"));
     }
 
     //REQUIRES: user has logged in

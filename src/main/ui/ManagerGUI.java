@@ -500,6 +500,7 @@ public class ManagerGUI extends JFrame {
                     cardLayout.show(masterPanel, "LOGIN");
                 }
                 saveData(JSON_PATH);
+                LogPrinter.printLog();
             } catch (Exception er) {
                 JOptionPane.showMessageDialog(ManagerGUI.this, "An error occured", "Error",
                         JOptionPane.ERROR_MESSAGE);

@@ -40,6 +40,7 @@ public class ManagerUI {
         }
         start();
         saveData();
+        LogPrinter.printLog();
     }
 
     //EFFECTS: creates a welcome UI and menu on startup

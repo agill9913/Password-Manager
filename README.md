@@ -33,3 +33,22 @@ Langara previously so wanted to do something that could incorporate what I learn
 *Phase 3*
 - As a user, I want to be able to remove my account
 - As a user, I want to see how many users are saved and the hashes
+
+*Phase 4: Task 2*
+
+Example of adding user, logging out, logging in to different user and then removing account:
+
+Sat Nov 20 23:03:36 PST 2021
+User added
+Sat Nov 20 23:03:36 PST 2021
+User added
+Sat Nov 20 23:03:42 PST 2021
+User logged in
+Sat Nov 20 23:03:51 PST 2021
+User logged out
+Sat Nov 20 23:03:56 PST 2021
+User logged in
+Sat Nov 20 23:04:06 PST 2021
+User removed
+
+*Phase 4: Task  3*
