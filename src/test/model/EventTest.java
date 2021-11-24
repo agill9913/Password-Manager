@@ -36,8 +36,15 @@ public class EventTest {
 
     @Test
     public void testEquals() {
-        assertNotEquals(null, e);
+        assertNotEquals(e, null);
         int tmp = 56;
         assertNotEquals(e, tmp);
+    }
+
+    @Test
+    public void testHashcode() {
+        Event e2 = new Event("We all fail today");
+        assertNotEquals(e.hashCode(), e2.hashCode());
+        assertEquals(e.hashCode(), e.hashCode());
     }
 }
