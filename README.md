@@ -52,3 +52,5 @@ Sat Nov 20 23:04:06 PST 2021
 User removed
 
 *Phase 4: Task  3*
+
+- More robust with exceptions instead of if statements to check user input

@@ -36,6 +36,7 @@ public class PasswordManager implements Writable, DataOperations {
     //EFFECTS: adds a user to the user accounts arraylist
     public void addUser(String username, String password) throws NoSuchAlgorithmException {
         accounts.add(new UserAccount(username, password, true));
+        EventLog.getInstance().logEvent(new Event("User added"));
     }
 
     //MODIFIES: this
@@ -61,6 +62,7 @@ public class PasswordManager implements Writable, DataOperations {
     @Override
     public void addSite(String site) {
         currUser.addSite(site);
+        EventLog.getInstance().logEvent(new Event("Adding site"));
     }
 
     //REQUIRES: user has logged in
@@ -69,6 +71,7 @@ public class PasswordManager implements Writable, DataOperations {
     @Override
     public void addData(String site, String key, String info) {
         currUser.addData(site, key, info);
+        EventLog.getInstance().logEvent(new Event("Adding data to site"));
     }
 
     //REQUIRES: user has logged in
@@ -77,6 +80,7 @@ public class PasswordManager implements Writable, DataOperations {
     @Override
     public void editData(String site, String key, String newData) {
         currUser.editData(site, key, newData);
+        EventLog.getInstance().logEvent(new Event("Editing existing data"));
     }
 
     //REQUIRES: user has logged in
@@ -85,6 +89,7 @@ public class PasswordManager implements Writable, DataOperations {
     @Override
     public void removeData(String site, String key) {
         currUser.removeData(site, key);
+        EventLog.getInstance().logEvent(new Event("Removing data"));
     }
 
     //REQUIRES: user has logged in
@@ -93,6 +98,7 @@ public class PasswordManager implements Writable, DataOperations {
     @Override
     public void removeSite(String site) {
         currUser.removeSite(site);
+        EventLog.getInstance().logEvent(new Event("Removing Site"));
     }
 
     //MODIFIES: this
@@ -167,6 +173,7 @@ public class PasswordManager implements Writable, DataOperations {
         JSONArray arr = new JSONArray();
         for (UserAccount acc: accounts) {
             arr.put(acc.toJson());
+            EventLog.getInstance().logEvent(new Event("Converting account to JSON"));
         }
         return arr;
     }
@@ -175,6 +182,7 @@ public class PasswordManager implements Writable, DataOperations {
     @Override
     public JSONObject toJson() throws NoSuchPaddingException, UnsupportedEncodingException,
             IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        EventLog.getInstance().logEvent(new Event("Converting manager to JSON"));
         return new JSONObject().put("accounts", accountsToJson());
     }
 }

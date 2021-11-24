@@ -1,8 +1,6 @@
 package persistence;
 
-import model.LoginInformation;
-import model.PasswordManager;
-import model.UserAccount;
+import model.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -31,6 +29,7 @@ public class JsonReader {
     public PasswordManager read() throws IOException, NoSuchAlgorithmException {
         String jsonData = readFile(source);
         JSONObject jsonObject = new JSONObject(jsonData);
+        EventLog.getInstance().logEvent(new Event("Reading manager from JSON"));
         return addAccounts(jsonObject);
     }
 
