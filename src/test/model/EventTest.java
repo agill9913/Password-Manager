@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Calendar;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 //Taken from in class code: https://github.students.cs.ubc.ca/CPSC210/AlarmSystem/blob/master/src/test/ca/ubc/cpsc210/alarm/test/EventTest.java
 public class EventTest {
@@ -32,5 +32,12 @@ public class EventTest {
     @Test
     public void testToString() {
         assertEquals(d.toString() + "\n" + "Sensor open at door", e.toString());
+    }
+
+    @Test
+    public void testEquals() {
+        assertNotEquals(null, e);
+        int tmp = 56;
+        assertNotEquals(e, tmp);
     }
 }
