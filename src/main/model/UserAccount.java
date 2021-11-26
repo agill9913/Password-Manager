@@ -22,6 +22,7 @@ public class UserAccount implements Writable, DataOperations {
     public UserAccount(String name, String pswd, boolean isNew) throws NoSuchAlgorithmException {
         userCred = new LoginInformation(name, pswd, isNew);
         dataMap = new UserData(name + pswd);
+        EventLog.getInstance().logEvent(new Event("Creating new user"));
     }
 
     //EFFECTS: initialize a new UserAccount with a new Hashmap and LoginInformation from saved parsed json data
@@ -29,6 +30,7 @@ public class UserAccount implements Writable, DataOperations {
             throws NoSuchAlgorithmException {
         userCred = info;
         dataMap = new UserData(data, info.getHash());
+        EventLog.getInstance().logEvent(new Event("Creating user from previous account"));
     }
 
     //EFFECTS: Returns a string representation of user credentials

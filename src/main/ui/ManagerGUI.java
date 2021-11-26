@@ -253,7 +253,7 @@ public class ManagerGUI extends JFrame {
             } else if (option == 1) {
                 JComboBox keys = new JComboBox(manager.getData(userSite));
                 JOptionPane.showMessageDialog(runningPanel, keys, "Saved values", JOptionPane.QUESTION_MESSAGE);
-                manager.removeData(userSite, keys.getSelectedItem().toString());
+                manager.removeData(userSite, keys.getSelectedItem().toString().split(":")[0]);
             }
             dataOutput.setText(manager.displayAllInfo());
         }
@@ -276,7 +276,8 @@ public class ManagerGUI extends JFrame {
             String dataChoice = data.getSelectedItem().toString();
             String newData = JOptionPane.showInputDialog(runningPanel, "Input new data value: ",
                     "Input Data", JOptionPane.QUESTION_MESSAGE);
-            data.addItem(newData);
+            //data.addItem(newData);
+            manager.editData(siteChoice, dataChoice.split(":")[0], newData);
             dataOutput.setText(manager.displayAllInfo());
         }
     }

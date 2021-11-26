@@ -38,19 +38,56 @@ Langara previously so wanted to do something that could incorporate what I learn
 
 Example of adding user, logging out, logging in to different user and then removing account:
 
-Sat Nov 20 23:03:36 PST 2021
+Fri Nov 26 04:24:31 PST 2021
+Creating user from previous account
+
+Fri Nov 26 04:24:31 PST 2021
 User added
-Sat Nov 20 23:03:36 PST 2021
-User added
-Sat Nov 20 23:03:42 PST 2021
+
+Fri Nov 26 04:24:37 PST 2021
 User logged in
-Sat Nov 20 23:03:51 PST 2021
-User logged out
-Sat Nov 20 23:03:56 PST 2021
-User logged in
-Sat Nov 20 23:04:06 PST 2021
+
+Fri Nov 26 04:24:57 PST 2021
+Adding data to site
+
+Fri Nov 26 04:25:04 PST 2021
+Editing existing data
+
+Fri Nov 26 04:25:11 PST 2021
+Removing Site
+
+Fri Nov 26 04:25:18 PST 2021
+Converting manager to JSON
+
+Fri Nov 26 04:25:18 PST 2021
+Converting account to JSON
+
+Fri Nov 26 04:25:34 PST 2021
 User removed
+
+Fri Nov 26 04:28:32 PST 2021
+Creating user from previous account
+
+Fri Nov 26 04:28:32 PST 2021
+User added
+
+Fri Nov 26 04:28:37 PST 2021
+Creating new user
+
+Fri Nov 26 04:28:37 PST 2021
+User added
+
+Fri Nov 26 04:28:39 PST 2021
+Converting manager to JSON
+
+Fri Nov 26 04:28:39 PST 2021
+Converting account to JSON
+
+Fri Nov 26 04:28:39 PST 2021
+Converting account to JSON
 
 *Phase 4: Task  3*
 
 - More robust with exceptions instead of if statements to check user input
+- Adding some existing methods to DataOperations interface
+- Use the singleton pattern in classes to make sure only one is created like with hashing
